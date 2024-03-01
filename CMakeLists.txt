@@ -3,8 +3,12 @@ cmake_minimum_required(VERSION 3.18)
 # Set the project name
 project(ft_malloc)
 
-# Set CMake to compile all files in the src directory
-file(GLOB SOURCES "src/**/*.c")
+# Set CMake to compile all files in the src directory except those in libft_plus
+file(GLOB_RECURSE SOURCES "src/test/*.c")
+
+# Compile files in libft_plus directory as a separate library
+file(GLOB_RECURSE LIBFT_PLUS_SOURCES "src/libft_plus/*.c")
+add_library(libft_plus STATIC ${LIBFT_PLUS_SOURCES})
 
 # Check if HOSTTYPE is set in the environment, else construct it
 if(NOT DEFINED ENV{HOSTTYPE})
@@ -24,8 +28,8 @@ set(EXECUTABLE_NAME "ft_malloc-${HOSTTYPE}")
 # Add the executable
 add_executable(${EXECUTABLE_NAME} ${SOURCES})
 
-# Include directories for the header files
-include_directories(${PROJECT_SOURCE_DIR}/lib/libft)
+# Include directories for the header files of both libft and libft_plus
+include_directories(${PROJECT_SOURCE_DIR}/lib/libft ${PROJECT_SOURCE_DIR}/src/libft_plus)
 
 # Add custom command to build the libft library before the main project
 add_custom_target(
@@ -39,8 +43,9 @@ add_custom_target(
 add_library(libft STATIC IMPORTED)
 set_property(TARGET libft PROPERTY IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/lib/libft/libft.a)
 
-# Make sure libft is built before compiling the main project
-add_dependencies(${EXECUTABLE_NAME} BuildLibft)
+# Make sure libft and libft_plus are built before compiling the main project
+add_dependencies(${EXECUTABLE_NAME} BuildLibft libft_plus)
 
-# Link the executable with the libft library
-target_link_libraries(${EXECUTABLE_NAME} libft)
+# Link the executable with the libft and libft_plus libraries
+target_link_libraries(${EXECUTABLE_NAME} libft libft_plus)
+include_directories(${PROJECT_SOURCE_DIR}/lib/libft/INC/ ${PROJECT_SOURCE_DIR}/src/libft_plus/inc/)

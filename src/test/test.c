@@ -1,7 +1,8 @@
 #include <stdint.h>
-#include <stdio.h>
+
+#include "libft_plus.h"
 
 int32_t main() {
-  printf("hello\n");
+  ft_malloc(0);
   return 0;
 }
