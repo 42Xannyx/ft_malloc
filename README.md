@@ -19,7 +19,7 @@ To build the `ft_malloc` project, follow these steps:
    From the root of the project directory, run:
 
    ```
-   cmake -B ./build/ -S .
+   cmake -B ./build/ -S . -DCMAKE_EXPORT_COMPILE_COMMANDS=YES
    ```
 
    This command configures the project, specifying `./build/` as the directory where the build files will be generated, and `.` indicating the source directory is the current directory.
