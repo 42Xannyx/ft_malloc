@@ -1,3 +1,6 @@
+# Misc
+lib/
+
 # Build
 build/
 .cache/
