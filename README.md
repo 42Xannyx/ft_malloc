@@ -73,3 +73,5 @@ docker run -it --name DebianMalloc -v .:/app malloc_container /bin/bash
 This command starts the container with an interactive shell, allowing you to execute commands within the container immediately. Replace `/bin/bash` with `/bin/sh` if your base image does not include Bash.
 
 For more details on configuring and customizing the build process, refer to the CMake and GNU Make documentation. Additionally, the Docker documentation provides extensive information on container management, image creation, and best practices for using Docker in development environments.
+
+### [Sources](example.com)

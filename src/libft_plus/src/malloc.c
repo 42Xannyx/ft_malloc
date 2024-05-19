@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <sys/mman.h>
 
+#include "alloc.h"
+
 void *ft_malloc(size_t size) {
-  void *value = NULL;
+  t_block block;
 
-  const allocated_value =
-      (void *)mmap(value, size, PROT_WRITE | PROT_READ, 0, 0, 0);
+  const void *allocated_value =
+      mmap(NULL, size, PROT_WRITE | PROT_READ, MAP_ANONYMOUS, -1, 0);
 
-  return allocated_value;
+  if (allocated_value == MAP_FAILED) {
+    perror("mmap():");
+    return NULL;
+  }
+
+  return (void *)allocated_value;
 }
