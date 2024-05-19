@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.18)
 # Set the project name
 project(ft_malloc)
 
+# Define a CMake option for debug mode
+option(DEBUG "Build with debug information" OFF)
+
 # Set CMake to compile all files in the src directory except those in libft_plus
 file(GLOB_RECURSE SOURCES "src/test/*.c")
 
@@ -17,6 +20,16 @@ if(NOT DEFINED ENV{HOSTTYPE})
     set(HOSTTYPE "${UNAME_M}_${UNAME_S}")
 else()
     set(HOSTTYPE $ENV{HOSTTYPE})
+endif()
+
+if(DEBUG)
+    message(STATUS "Building in debug mode")
+    set(CMAKE_BUILD_TYPE Debug)
+    set(COMMON_COMPILE_OPTIONS "-g3" "-fsanitize=address")
+else()
+    message(STATUS "Building in release mode")
+    set(CMAKE_BUILD_TYPE Release)
+    set(COMMON_COMPILE_OPTIONS "")
 endif()
 
 # Add the HOSTTYPE definition for the preprocessor
@@ -49,3 +62,11 @@ add_dependencies(${EXECUTABLE_NAME} BuildLibft libft_plus)
 # Link the executable with the libft and libft_plus libraries
 target_link_libraries(${EXECUTABLE_NAME} libft libft_plus)
 include_directories(${PROJECT_SOURCE_DIR}/lib/libft/INC/ ${PROJECT_SOURCE_DIR}/src/libft_plus/inc/)
+
+# Set compile options for the executable
+target_compile_options(${EXECUTABLE_NAME} PRIVATE ${COMMON_COMPILE_OPTIONS})
+
+# Set link options for the executable
+if(DEBUG)
+    target_link_options(${EXECUTABLE_NAME} PRIVATE -fsanitize=address)
+endif()
