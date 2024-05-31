@@ -16,3 +16,4 @@ The Translation Lookaside Buffer is an essential component in modern CPUs, enhan
 - [How to Write Your Own malloc() and free()](https://tharikasblogs.blogspot.com/p/how-to-write-your-own-malloc-and-free.html)
 - [How to Create Your Own malloc() Library](https://medium.com/a-42-journey/how-to-create-your-own-malloc-library-b86fedd39b96)
 - [mmap() man page](https://www.man7.org/linux/man-pages/man2/mmap.2.html)
+- [Writing a Memory Allocator](http://dmitrysoshnikov.com/compilers/writing-a-memory-allocator/)

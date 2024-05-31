@@ -1,1 +1,4 @@
-void ft_free(void *ptr) { return; }
+void ft_free(void *ptr) {
+  (void)ptr;
+  return;
+}
