@@ -1,18 +1,22 @@
 #include <stdio.h>
 #include <sys/mman.h>
+#include <unistd.h>
 
 #include "alloc.h"
 
 void *ft_malloc(size_t size) {
   t_block block;
+  int32_t heap_size = getpagesize();
 
-  const void *allocated_value =
-      mmap(NULL, size, PROT_WRITE | PROT_READ, MAP_ANONYMOUS, -1, 0);
+  const void *heap = (t_heap *)mmap(NULL, heap_size, PROT_WRITE | PROT_READ,
+                                    MAP_PRIVATE | MAP_ANON, -1, 0);
 
-  if (allocated_value == MAP_FAILED) {
-    perror("mmap():");
+  if (heap == MAP_FAILED) {
+    perror("mmap()");
     return NULL;
   }
 
-  return (void *)allocated_value;
+  printf("%p\n", heap);
+
+  return (void *)heap;
 }

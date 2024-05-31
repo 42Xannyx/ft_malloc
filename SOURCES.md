@@ -3,6 +3,7 @@
 ## Videos
 
 - [But, what is Virtual Memory?](https://www.youtube.com/watch?v=A9WLYbE0p-I)
+- [i wrote my own memory allocator in C to prove a point](https://www.youtube.com/watch?v=CulF4YQt6zA)
 
 ## Terms
 

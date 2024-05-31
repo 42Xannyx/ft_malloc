@@ -4,6 +4,11 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#define TINY_HEAP_ALLOCATION_SIZE (4 * getpagesize())
+#define TINY_BLOCK_SIZE (TINY_HEAP_ALLOCATION_SIZE / 128)
+#define SMALL_HEAP_ALLOCATION_SIZE (8 * getpagesize())
+#define SMALL_BLOCK_SIZE (SMALL_HEAP_ALLOCATION_SIZE / 128)
+
 /**
  * @struct block
  * @brief Structure representing a block in the heap.
@@ -15,9 +20,24 @@
  */
 typedef struct block {
   size_t size;        /**< Size of the block of memory. */
-  bool freed;         /**< Flag indicating whether the block is free. */
-  struct block *prev; /**< Pointer to the previous block in the heap. */
+  bool inuse;         /**< Flag indicating whether the block is free. */
   struct block *next; /**< Pointer to the next block in the heap. */
 } t_block;
+
+/**
+ * @struct heap
+ * @brief Structure representing the heap.
+ *
+ * The `heap` structure is used to manage the overall heap. It contains
+ * metadata about the heap, including pointers to the previous and next heaps,
+ * the total size of the heap, the size of the free memory in the heap, and the
+ * number of blocks in the heap.
+ */
+typedef struct heap {
+  struct heap *next;  /**< Pointer to the next heap structure. */
+  size_t total_size;  /**< Total size of the heap. */
+  size_t free_size;   /**< Size of the free memory in the heap. */
+  size_t block_count; /**< Number of blocks in the heap. */
+} t_heap;
 
 #endif // !ALLOC
