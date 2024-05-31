@@ -5,8 +5,8 @@
 #include "libft_plus.h"
 
 int32_t main() {
-  char *test2 = ft_malloc(sizeof(char) * 5);
-  char *test1 = malloc(sizeof(char) * 5);
+  char *test1 = malloc(sizeof(char) * 1);
+  char *test2 = ft_malloc(sizeof(char) * 1);
 
   for (int i = 0; i < 1; i++) {
     test1[i] = 'A'; // Fill with 'A'

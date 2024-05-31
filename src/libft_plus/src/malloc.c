@@ -6,8 +6,11 @@
 #include "alloc.h"
 
 void *ft_malloc(size_t size) {
-  // t_block block;
+  if (size <= 0) {
+    return NULL;
+  }
 
+  // t_block block;
   const size_t aligned_size = align(size);
   const t_heap *heap =
       (t_heap *)mmap(NULL, aligned_size, PROT_WRITE | PROT_READ,
