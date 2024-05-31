@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.18)
 
-# Set the project name
 project(ft_malloc)
+set(CMAKE_C_STANDARD 23)
 
-# Define a CMake option for debug mode
 option(DEBUG "Build with debug information" OFF)
 
 # Set CMake to compile all files in the src directory except those in libft_plus

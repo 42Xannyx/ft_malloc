@@ -14,10 +14,10 @@
  * whether the block is free.
  */
 typedef struct block {
-  struct block *prev; /**< Pointer to the previous block in the heap. */
-  struct block *next; /**< Pointer to the next block in the heap. */
   size_t size;        /**< Size of the block of memory. */
   bool freed;         /**< Flag indicating whether the block is free. */
+  struct block *prev; /**< Pointer to the previous block in the heap. */
+  struct block *next; /**< Pointer to the next block in the heap. */
 } t_block;
 
 #endif // !ALLOC

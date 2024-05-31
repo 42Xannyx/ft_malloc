@@ -6,7 +6,7 @@
 
 Before you begin, ensure you have installed:
 
-- CMake (version 3.28 or higher recommended)
+- CMake (version 3.18 or higher recommended)
 - GNU Make
 - A C compiler (GCC or Clang)
 

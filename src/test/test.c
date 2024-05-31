@@ -1,4 +1,4 @@
-#include <malloc/malloc.h>
+#include <malloc.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -18,10 +18,10 @@ int32_t main() {
   // test2[20] = '\0'; // Null-terminator
   // printf("Ft_malloc test1: %s\n", test2);
 
-  size_t size = malloc_size(test1);
+  size_t size = malloc_usable_size(test1);
   printf("Allocated memory size of malloc: %zu bytes\n", size);
 
-  size = malloc_size(test2);
+  size = malloc_usable_size(test2);
   printf("Allocated memory size of ft_malloc: %zu bytes\n", size);
 
   return 0;
