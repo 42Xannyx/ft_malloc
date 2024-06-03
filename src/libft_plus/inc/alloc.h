@@ -40,12 +40,13 @@ typedef struct heap {
   size_t total_size;  /**< Total size of the heap. */
   size_t free_size;   /**< Size of the free memory in the heap. */
   size_t block_count; /**< Number of blocks in the heap. */
-  struct heap *next;  /**< Pointer to the next heap structure. */
+  t_block *blocks;    /**< Pointer to all blocks. */
+  struct heap *next;
 } t_heap;
 
 // ****** Functions ****** //
 
-__attribute__((warn_unused_result)) inline size_t align(size_t n) {
+__attribute__((warn_unused_result)) static inline size_t align(size_t n) {
   return (n + sizeof(word_t) - 1) & ~(sizeof(word_t) - 1);
 }
 
