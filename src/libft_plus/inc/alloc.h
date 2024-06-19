@@ -53,4 +53,23 @@ __attribute__((warn_unused_result)) static inline size_t align(size_t n) {
   return (n + sizeof(word_t) - 1) & ~(sizeof(word_t) - 1);
 }
 
+__attribute__((warn_unused_result)) static inline size_t
+determine_heap_size(size_t n) {
+  if (n <= (size_t)TINY_BLOCK_SIZE)
+    return TINY_HEAP_ALLOCATION_SIZE;
+
+  if (n <= (size_t)SMALL_BLOCK_SIZE)
+    return SMALL_HEAP_ALLOCATION_SIZE;
+
+  return n;
+}
+
+__attribute__((warn_unused_result)) static inline size_t
+determine_block_size(size_t n) {
+  if (n <= (size_t)TINY_BLOCK_SIZE)
+    return TINY_BLOCK_SIZE;
+
+  return SMALL_BLOCK_SIZE;
+}
+
 #endif // !ALLOC

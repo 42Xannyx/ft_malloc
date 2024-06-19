@@ -26,12 +26,6 @@ void *ft_malloc(size_t size) {
 
   t_block *block = extend_heap(heap, aligned_size);
 
-#ifdef DEBUG
-  print_block(block);
-#endif
-
-  block->inuse = false;
-
   pthread_mutex_unlock(&mutex);
   return (void *)(block + 1);
 }
