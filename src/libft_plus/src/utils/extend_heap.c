@@ -3,8 +3,8 @@
 
 #include "alloc.h"
 
-#define PROT PROT_WRITE | PROT_READ
-#define MAP MAP_PRIVATE | MAP_ANON
+#define PROT (PROT_READ | PROT_WRITE)
+#define MAP (MAP_ANONYMOUS | MAP_PRIVATE)
 
 t_block *initiate_block(t_heap *heap, size_t size) {
   t_block *block = (t_block *)(heap + 1);
@@ -20,7 +20,7 @@ t_block *extend_heap(t_heap *heap, const size_t size) {
   const size_t total_size = sizeof(t_block) + size;
 
   t_heap *tmp_heap = (t_heap *)mmap(NULL, total_size, PROT, MAP, -1, 0);
-  if (heap == MAP_FAILED) {
+  if (tmp_heap == MAP_FAILED) {
     perror("mmap()");
     return NULL;
   }

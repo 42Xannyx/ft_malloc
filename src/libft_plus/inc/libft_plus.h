@@ -1,7 +1,6 @@
 #ifndef LIBFT_PLUS_H
 #define LIBFT_PLUS_H
 
-#include <stdlib.h>
 #include <unistd.h>
 
 #include "alloc.h"

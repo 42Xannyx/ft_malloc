@@ -20,6 +20,7 @@ endif()
 
 if(DEBUG)
     message(STATUS "Building in debug mode")
+    add_definitions(-DDEBUG)
     set(CMAKE_BUILD_TYPE Debug)
     set(CMAKE_C_FLAGS "-g3 -fsanitize=address -Wall -Wextra -Werror -Wunused-result -Wunused-variable")
 else()

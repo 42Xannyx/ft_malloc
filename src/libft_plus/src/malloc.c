@@ -1,8 +1,10 @@
 #include <pthread.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <unistd.h>
 
 #include "alloc.h"
+#include "debug.h"
 #include "libft_plus.h"
 
 /*
@@ -19,14 +21,14 @@ void *ft_malloc(size_t size) {
     return NULL;
   }
 
-  if (!heap) {
-    initialize_heap(heap);
-  }
-
   pthread_mutex_lock(&mutex);
   const size_t aligned_size = align(size);
 
   t_block *block = extend_heap(heap, aligned_size);
+
+#ifdef DEBUG
+  print_block(block);
+#endif
 
   block->inuse = false;
 

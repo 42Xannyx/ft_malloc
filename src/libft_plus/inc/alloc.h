@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <unistd.h>
 
 #define TINY_HEAP_ALLOCATION_SIZE (4 * getpagesize())
 #define TINY_BLOCK_SIZE (TINY_HEAP_ALLOCATION_SIZE / 128)
@@ -25,6 +26,7 @@ typedef struct block {
   size_t size;        /**< Size of the block of memory. */
   bool inuse;         /**< Flag indicating whether the block is free. */
   struct block *next; /**< Pointer to the next block in the heap. */
+  struct block *prev; /**< Pointer to the previous block in the heap. */
 } t_block;
 
 /**
@@ -40,8 +42,9 @@ typedef struct heap {
   size_t total_size;  /**< Total size of the heap. */
   size_t free_size;   /**< Size of the free memory in the heap. */
   size_t block_count; /**< Number of blocks in the heap. */
-  t_block *blocks;    /**< Pointer to all blocks. */
-  struct heap *next;
+  t_block *blocks;    /**< Pointer to the first block in the heap. */
+  struct heap *next;  /**< Pointer to the next heap. */
+  struct heap *prev;  /**< Pointer to the previous heap. */
 } t_heap;
 
 // ****** Functions ****** //
