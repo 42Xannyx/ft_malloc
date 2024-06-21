@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <unistd.h>
 
 #define TINY_HEAP_ALLOCATION_SIZE (4 * getpagesize())
@@ -55,10 +56,10 @@ __attribute__((warn_unused_result)) static inline size_t align(size_t n) {
 
 __attribute__((warn_unused_result)) static inline size_t
 determine_heap_size(size_t n) {
-  if (n <= (size_t)TINY_BLOCK_SIZE)
+  if (n <= (size_t)TINY_HEAP_ALLOCATION_SIZE)
     return TINY_HEAP_ALLOCATION_SIZE;
 
-  if (n <= (size_t)SMALL_BLOCK_SIZE)
+  if (n <= (size_t)SMALL_HEAP_ALLOCATION_SIZE)
     return SMALL_HEAP_ALLOCATION_SIZE;
 
   return n;
@@ -70,6 +71,24 @@ determine_block_size(size_t n) {
     return TINY_BLOCK_SIZE;
 
   return SMALL_BLOCK_SIZE;
+}
+
+__attribute__((warn_unused_result)) static inline size_t
+determine_total_block_size(size_t n) {
+  size_t total_size = 0;
+  int32_t remaining = n;
+
+  while (remaining >= 0) {
+    if (remaining <= SMALL_BLOCK_SIZE) {
+      remaining = remaining - SMALL_BLOCK_SIZE;
+      total_size = total_size + SMALL_BLOCK_SIZE;
+    } else {
+      remaining = remaining - TINY_BLOCK_SIZE;
+      total_size = total_size + TINY_BLOCK_SIZE;
+    }
+  }
+
+  return total_size;
 }
 
 #endif // !ALLOC

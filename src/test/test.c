@@ -8,12 +8,12 @@
 
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "libft_plus.h"
 
 int32_t main() {
   char *ptr = ft_malloc(sizeof(char) * 320 + 1);
+  ft_malloc(sizeof(char) * 1024 + 1);
 
   for (int i = 0; i < 26; i++) {
     ptr[i] = i + 'A';

@@ -1,7 +1,6 @@
 #ifndef LIBFT_PLUS_H
 #define LIBFT_PLUS_H
 
-#include <malloc/_platform.h>
 #include <stdint.h>
 #include <unistd.h>
 
@@ -15,10 +14,12 @@ void *ft_realloc(void *ptr, size_t size);
 
 //******** Functions ********//
 
-__attribute__((warn_unused_result)) t_block *extend_heap(t_heap *heap,
+__attribute__((warn_unused_result)) t_block *extend_heap(t_heap **heap,
                                                          size_t size);
+__attribute__((warn_unused_result)) t_block *extend_blocks(t_heap **heap,
+                                                           size_t size);
 void initialize_heap(t_heap *heap);
-t_block *initiate_block(t_heap *heap, size_t size);
+t_block *add_block(t_heap **heap, size_t size);
 
 //******** Inline Functions ********//
 

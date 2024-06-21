@@ -24,7 +24,16 @@ void *ft_malloc(size_t size) {
   pthread_mutex_lock(&mutex);
   const size_t aligned_size = align(size);
 
-  t_block *block = extend_heap(heap, aligned_size);
+  t_block *block = NULL;
+  if (!heap) {
+    block = extend_heap(&heap, aligned_size);
+  } else {
+    block = extend_blocks(&heap, aligned_size);
+  }
+
+#ifdef DEBUG
+  print_heap(heap);
+#endif
 
   pthread_mutex_unlock(&mutex);
   return (void *)(block + 1);
