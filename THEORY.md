@@ -70,3 +70,7 @@ There is an additional pointer that always points to the last block of the heap 
 - **Reduced System Calls**: By allocating larger chunks of memory at once, the allocator minimizes the number of mmap() system calls, reducing overhead.
 - **Efficient Block Management**: The use of a pointer to the last block (t_heap->last_block) reduces the need for iterating through the entire heap, speeding up allocation and deallocation operations.
 - **Fragmentation Management**: The allocator coalesces adjacent free blocks to minimize fragmentation and make efficient use of available memory.
+
+### Visual representation
+
+![Untitled-2024-06-22-1416](https://github.com/42Xannyx/ft_malloc/assets/56308735/add8e84c-0621-4686-85ab-82befb0346a5)
