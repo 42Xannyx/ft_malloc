@@ -9,20 +9,17 @@ LIBFT_MALLOC_SYMLINK := libft_malloc.so
 all: $(CMAKE_BUILD_DIR) $(LIBFT_MALLOC_SYMLINK)
 
 $(CMAKE_BUILD_DIR):
-	@cmake -B $(CMAKE_BUILD_DIR) -S . -DCMAKE_BUILD_TYPE=Release
+	@cmake -B $(CMAKE_BUILD_DIR) -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=YES
 	@cmake --build $(CMAKE_BUILD_DIR)
 
-debug:
-	@cmake -B $(CMAKE_BUILD_DIR) -S . -DCMAKE_BUILD_TYPE=Debug -DDEBUG=1
+debug: $(LIBFT_MALLOC_SYMLINK)
+	@cmake -B $(CMAKE_BUILD_DIR) -S . -DCMAKE_BUILD_TYPE=Debug -DDEBUG=1 -DCMAKE_EXPORT_COMPILE_COMMANDS=YES
 	@cmake --build $(CMAKE_BUILD_DIR)
+
+$(LIBFT_MALLOC_SYMLINK): $(LIBFT_MALLOC)
+	@ln -s $(LIBFT_MALLOC) $(LIBFT_MALLOC_SYMLINK)
 
 clean:
 	@rm -rf $(CMAKE_BUILD_DIR) $(LIBFT_MALLOC_SYMLINK) run_test
-
-test: run_test
-	@$(CC) $(CFLAGS) -o run_test ./src/test/test.c -I./src/libft_plus/inc/
-	@./run.sh ./run_test
-
-run_test: ./src/test/test.c $(LIBFT_MALLOC_SYMLINK)
 
 .PHONY: all clean test

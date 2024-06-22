@@ -1,18 +1,14 @@
-#ifdef __APPLE__
-#include <malloc/malloc.h>
-#endif
+/*#ifdef __APPLE__*/
+/*#include <malloc/malloc.h>*/
+/*#endif*/
+/**/
+/*#ifdef linux*/
+/*#include <malloc.h>*/
+/*#endif*/
 
-#ifdef linux
-#include <malloc.h>
-#endif
+#include "libft_plus.h"
 
-#include <assert.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
-/*#include "libft_plus.h"*/
 
 void fill_string(char *ptr, int64_t n) {
   for (int i = 0; i < n; i++) {
@@ -21,11 +17,12 @@ void fill_string(char *ptr, int64_t n) {
 }
 
 int32_t main() {
+  char *test = ft_malloc(3);
 
-  /*assert(malloc(0) == NULL);*/
+  printf("test = %s\n", test);
 
-  char *ptr = malloc(sizeof(char) * 320);
-  char *another_ptr = malloc(320);
+  char *ptr = ft_malloc(sizeof(char) * 320);
+  char *another_ptr = ft_malloc(320);
 
   // Should overflow
   fill_string(ptr, 319);
@@ -44,8 +41,8 @@ int32_t main() {
 #endif /* ifdef linux */
 
 #ifdef __APPLE__
-  size_t size = malloc_size(ptr);
-  printf("Allocated memory size of ft_malloc: %zu bytes\n", size);
+  /*size_t size = malloc_size(ptr);*/
+  /*printf("Allocated memory size of ft_malloc: %zu bytes\n", size);*/
 #endif /* ifdef linux */
 
   return 0;

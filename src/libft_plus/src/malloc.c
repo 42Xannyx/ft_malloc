@@ -16,7 +16,7 @@
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 static t_heap *heap = NULL;
 
-void *malloc(size_t size) {
+void *ft_malloc(size_t size) {
   if (size <= 0) {
     return NULL;
   }
@@ -36,5 +36,6 @@ void *malloc(size_t size) {
 #endif
 
   pthread_mutex_unlock(&mutex);
-  return (void *)(block + 1);
+  (void)block;
+  return "hello";
 }
