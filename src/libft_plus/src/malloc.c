@@ -16,7 +16,7 @@
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 static t_heap *heap = NULL;
 
-void *ft_malloc(size_t size) {
+void *malloc(size_t size) {
   if (size <= 0) {
     return NULL;
   }

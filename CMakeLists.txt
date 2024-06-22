@@ -30,9 +30,23 @@ else()
 endif()
 
 add_definitions(-DHOSTTYPE="${HOSTTYPE}")
-set(EXECUTABLE_NAME "ft_malloc-${HOSTTYPE}")
+set(LIBRARY_NAME "libft_malloc_${HOSTTYPE}")
 
-add_executable(${EXECUTABLE_NAME} ${SOURCES})
+add_library(${LIBRARY_NAME} SHARED ${SOURCES})
+
+# Ensure the shared library uses the .so extension on all platforms
+set_target_properties(${LIBRARY_NAME} PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+    OUTPUT_NAME "ft_malloc_${HOSTTYPE}"
+    SUFFIX ".so"
+)
+
+# Set rpath for macOS and Linux
+if(APPLE)
+    set_target_properties(${LIBRARY_NAME} PROPERTIES INSTALL_RPATH "@loader_path")
+else()
+    set_target_properties(${LIBRARY_NAME} PROPERTIES INSTALL_RPATH "\$ORIGIN")
+endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/lib/libft ${PROJECT_SOURCE_DIR}/src/libft_plus)
 
@@ -46,13 +60,13 @@ add_custom_target(
 add_library(libft STATIC IMPORTED)
 set_property(TARGET libft PROPERTY IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/lib/libft/libft.a)
 
-add_dependencies(${EXECUTABLE_NAME} BuildLibft libft_plus)
+add_dependencies(${LIBRARY_NAME} BuildLibft libft_plus)
 
-target_link_libraries(${EXECUTABLE_NAME} libft libft_plus)
+target_link_libraries(${LIBRARY_NAME} libft libft_plus)
 include_directories(${PROJECT_SOURCE_DIR}/lib/libft/INC/ ${PROJECT_SOURCE_DIR}/src/libft_plus/inc/)
 
 if(DEBUG)
-    target_link_options(${EXECUTABLE_NAME} PRIVATE -fsanitize=address)
+    target_link_options(${LIBRARY_NAME} PRIVATE -fsanitize=address)
 endif()
 
 # Print out the compile options for verification

@@ -6,21 +6,37 @@
 #include <malloc.h>
 #endif
 
+#include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include "libft_plus.h"
+/*#include "libft_plus.h"*/
+
+void fill_string(char *ptr, int64_t n) {
+  for (int i = 0; i < n; i++) {
+    ptr[i] = (i % 26) + 'A';
+  }
+}
 
 int32_t main() {
-  char *ptr = ft_malloc(sizeof(char) * 320 + 1);
-  ft_malloc(sizeof(char) * 1024 + 1);
 
-  for (int i = 0; i < 26; i++) {
-    ptr[i] = i + 'A';
-  }
+  /*assert(malloc(0) == NULL);*/
 
-  ptr[26] = '\0';
+  char *ptr = malloc(sizeof(char) * 320);
+  char *another_ptr = malloc(320);
+
+  // Should overflow
+  fill_string(ptr, 319);
+
+  ptr[319] = '\0';
+  another_ptr[319] = '\0';
   printf("Malloc: %s\n", ptr);
+  printf("strlen: %ld\n", strlen(ptr));
+
+  printf("Malloc: %s\n", another_ptr);
+  printf("strlen: %ld\n", strlen(another_ptr));
 
 #ifdef linux
   size = malloc_usable_size(test2);
