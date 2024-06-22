@@ -74,3 +74,5 @@ There is an additional pointer that always points to the last block of the heap 
 ### Visual representation
 
 ![Untitled-2024-06-22-1416](https://github.com/42Xannyx/ft_malloc/assets/56308735/add8e84c-0621-4686-85ab-82befb0346a5)
+
+https://excalidraw.com/#json=Qwpz5ZCxd008nimZEBXAa,dTv6Y-HyQGlf0UCOmB54dw
