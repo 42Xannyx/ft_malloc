@@ -12,6 +12,6 @@ WORKDIR /app
 
 COPY . /app
 
-RUN cmake -B ./build/ -S . && make -C ./build/
+RUN make
 
 CMD ["tail", "-f", "/dev/null"]

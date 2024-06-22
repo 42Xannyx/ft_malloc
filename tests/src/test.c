@@ -16,8 +16,8 @@ void fill_string(char *ptr, int64_t n) {
   }
 }
 
-int32_t main() {
-  char *test = ft_malloc(3);
+int32_t main(void) {
+  char *test = ft_malloc(0);
 
   printf("test = %s\n", test);
 
@@ -36,8 +36,8 @@ int32_t main() {
   printf("strlen: %ld\n", strlen(another_ptr));
 
 #ifdef linux
-  size = malloc_usable_size(test2);
-  printf("Allocated memory size of ft_malloc: %zu bytes\n", size);
+  /*size = malloc_usable_size(ptr);*/
+  /*printf("Allocated memory size of ft_malloc: %zu bytes\n", size);*/
 #endif /* ifdef linux */
 
 #ifdef __APPLE__

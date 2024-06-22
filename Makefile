@@ -3,8 +3,7 @@ HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 
 CMAKE_BUILD_DIR := build
-LIBFT_MALLOC := $(CMAKE_BUILD_DIR)/libft_malloc_$(HOSTTYPE).so
-LIBFT_MALLOC_SYMLINK := libft_malloc.so
+LIBFT_MALLOC := $(CMAKE_BUILD_DIR)/libft_malloc_$(HOSTTYPE).so LIBFT_MALLOC_SYMLINK := libft_malloc.so
 
 all: $(CMAKE_BUILD_DIR) $(LIBFT_MALLOC_SYMLINK)
 
@@ -21,5 +20,9 @@ $(LIBFT_MALLOC_SYMLINK): $(LIBFT_MALLOC)
 
 clean:
 	@rm -rf $(CMAKE_BUILD_DIR) $(LIBFT_MALLOC_SYMLINK) run_test
+
+test: all
+	make -C ./tests/
+	./run.sh ./tests/alloc_tester
 
 .PHONY: all clean test

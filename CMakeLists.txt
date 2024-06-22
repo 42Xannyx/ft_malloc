@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.18)
 
 project(ft_malloc)
-set(CMAKE_C_STANDARD 23)
+# set(CMAKE_C_STANDARD 23)
 
 option(DEBUG "Build with debug information" OFF)
-file(GLOB_RECURSE SOURCES "src/test/*.c")
+file(GLOB_RECURSE SOURCES "src/**/*.c")
 
 file(GLOB_RECURSE LIBFT_PLUS_SOURCES "src/libft_plus/*.c")
 add_library(libft_plus STATIC ${LIBFT_PLUS_SOURCES})
