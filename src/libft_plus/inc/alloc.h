@@ -40,12 +40,13 @@ typedef struct block {
  * number of blocks in the heap.
  */
 typedef struct heap {
-  size_t total_size;  /**< Total size of the heap. */
-  size_t free_size;   /**< Size of the free memory in the heap. */
-  size_t block_count; /**< Number of blocks in the heap. */
-  t_block *blocks;    /**< Pointer to the first block in the heap. */
-  struct heap *next;  /**< Pointer to the next heap. */
-  struct heap *prev;  /**< Pointer to the previous heap. */
+  size_t total_size;   /**< Total size of the heap. */
+  size_t free_size;    /**< Size of the free memory in the heap. */
+  size_t block_count;  /**< Number of blocks in the heap. */
+  t_block *last_block; /**< Pointer to the last block in the heap. */
+  t_block *blocks;     /**< Pointer to the first block in the heap. */
+  struct heap *next;   /**< Pointer to the next heap. */
+  struct heap *prev;   /**< Pointer to the previous heap. */
 } t_heap;
 
 // ****** Functions ****** //

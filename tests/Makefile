@@ -15,7 +15,7 @@ CFLAGS = -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^ $(LIB_SOURCES)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIB_SOURCES) -DDEBUG=1
 	@echo "Compilation successful"
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c

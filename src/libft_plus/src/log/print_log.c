@@ -3,7 +3,7 @@
 #include "alloc.h"
 
 #ifdef DEBUG
-void print_sizes() {
+void print_sizes(void) {
   printf("\033[1;34mTINY_HEAP_ALLOCATION_SIZE\033[0m: %d bytes\n",
          TINY_HEAP_ALLOCATION_SIZE);
   printf("\033[1;34mTINY_BLOCK_SIZE\033[0m: %d bytes\n", TINY_BLOCK_SIZE);
@@ -28,7 +28,9 @@ void print_heap(t_heap *heap) {
   printf("  \033[1;36mNext Heap\033[0m: %p\n", (void *)heap->next);
   printf("  \033[1;36mPrevious Heap\033[0m: %p\n", (void *)heap->prev);
 
-  printf("  \033[1;36mBlocks:\033[0m\n");
+  printf("  \033[1;36mLast Block:\033[0m\n");
+  print_block(heap->last_block);
+  printf("  \n\033[1;36mBlocks:\033[0m\n");
   t_block *current_block = heap->blocks;
   while (current_block != NULL) {
     print_block(current_block);

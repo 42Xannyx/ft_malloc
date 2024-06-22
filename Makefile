@@ -12,8 +12,8 @@ $(CMAKE_BUILD_DIR):
 	@cmake --build $(CMAKE_BUILD_DIR)
 
 debug: $(LIBFT_MALLOC_SYMLINK)
-	@cmake -B $(CMAKE_BUILD_DIR) -S . -DCMAKE_BUILD_TYPE=Debug -DDEBUG=1 -DCMAKE_EXPORT_COMPILE_COMMANDS=YES
-	@cmake --build $(CMAKE_BUILD_DIR)
+	@cmake -B $(CMAKE_BUILD_DIR) -S . -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=YES -DDEBUG=1 
+	@cmake --build $(CMAKE_BUILD_DIR) 
 
 $(LIBFT_MALLOC_SYMLINK): $(LIBFT_MALLOC)
 	@ln -s $(LIBFT_MALLOC) $(LIBFT_MALLOC_SYMLINK)
@@ -21,7 +21,8 @@ $(LIBFT_MALLOC_SYMLINK): $(LIBFT_MALLOC)
 clean:
 	@rm -rf $(CMAKE_BUILD_DIR) $(LIBFT_MALLOC_SYMLINK) run_test
 
-test: all
+test: 
+	make -C ./build/
 	make -C ./tests/
 	./run.sh ./tests/alloc_tester
 

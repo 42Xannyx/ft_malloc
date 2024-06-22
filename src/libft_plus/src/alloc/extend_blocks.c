@@ -13,15 +13,19 @@ t_block *extend_blocks(t_heap **heap, const size_t size) {
   (*heap)->block_count = (*heap)->block_count + determine_amount_blocks(size);
   t_block *block = add_block(heap, size);
 
-#ifdef DEBUG
-  printf("New blocks\n");
+  t_block *tmp_block = (*heap)->last_block;
 
-  t_block *tmp_block = block;
   while (tmp_block->next) {
-    print_block(tmp_block);
     tmp_block = tmp_block->next;
   }
-  print_block(tmp_block);
+
+  (*heap)->last_block = tmp_block;
+
+#ifdef DEBUG
+  printf("\n-------------------\n");
+  printf("\nNew blocks\n");
+
+  print_heap(*heap);
 #endif
 
   return block;

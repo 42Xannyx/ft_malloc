@@ -7,7 +7,7 @@
 
 t_block *add_block(t_heap **heap, size_t size) {
   int64_t remaining = size;
-  t_block *tmp_block = (*heap)->blocks;
+  t_block *tmp_block = (*heap)->last_block;
   t_block *first_new_block = NULL;
 
   if (tmp_block) {

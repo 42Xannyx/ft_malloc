@@ -1,5 +1,6 @@
 # Misc
 lib/libft
+tests/alloc_tester
 
 # Build
 build/

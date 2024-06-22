@@ -32,7 +32,7 @@ void *ft_malloc(size_t size) {
   }
 
 #ifdef DEBUG
-  print_heap(heap);
+  /*print_heap(heap);*/
 #endif
 
   pthread_mutex_unlock(&mutex);

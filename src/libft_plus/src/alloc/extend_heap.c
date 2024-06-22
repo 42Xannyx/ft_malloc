@@ -27,9 +27,17 @@ t_block *extend_heap(t_heap **heap, const size_t size) {
   (*heap) = tmp_heap;
 
   t_block *block = add_block(heap, size);
+  t_block *tmp_block = block;
+
+  while (tmp_block->next) {
+    tmp_block = tmp_block->next;
+  }
+
+  (*heap)->last_block = tmp_block;
 
 #ifdef DEBUG
   printf("Extend heap\n");
+  print_heap(*heap);
 #endif
 
   return block;
