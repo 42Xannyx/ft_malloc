@@ -22,8 +22,8 @@ t_block *extend_blocks(t_heap **heap, const size_t size) {
   (*heap)->last_block = tmp_block;
 
 #ifdef DEBUG
-  printf("\n-------------------\n");
-  printf("\nNew blocks\n");
+  /*printf("\n-------------------\n");*/
+  /*printf("\nNew blocks\n");*/
 
   print_heap(*heap);
 #endif

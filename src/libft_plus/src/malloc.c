@@ -26,9 +26,24 @@ void *ft_malloc(size_t size) {
 
   t_block *block = NULL;
   if (!heap) {
+    printf("First extend of heap\n");
     block = extend_heap(&heap, aligned_size);
   } else {
-    block = extend_blocks(&heap, aligned_size);
+    t_heap *tmp_heap = heap;
+    size_t block_size = determine_block_size(aligned_size);
+
+    while (tmp_heap->next) {
+      tmp_heap = tmp_heap->next;
+    }
+
+    if (block_size > tmp_heap->free_size) {
+      printf("Call mmap()\n");
+      block = extend_heap(&heap, aligned_size);
+    } else {
+      printf("Add blocks\n");
+      block = extend_blocks(&tmp_heap, aligned_size);
+      heap = tmp_heap;
+    }
   }
 
 #ifdef DEBUG

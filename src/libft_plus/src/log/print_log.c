@@ -28,8 +28,11 @@ void print_heap(t_heap *heap) {
   printf("  \033[1;36mNext Heap\033[0m: %p\n", (void *)heap->next);
   printf("  \033[1;36mPrevious Heap\033[0m: %p\n", (void *)heap->prev);
 
-  printf("  \033[1;36mLast Block:\033[0m\n");
-  print_block(heap->last_block);
+  if (heap->last_block) {
+    printf("  \033[1;36mLast Block:\033[0m\n");
+    print_block(heap->last_block);
+  }
+
   printf("  \n\033[1;36mBlocks:\033[0m\n");
   t_block *current_block = heap->blocks;
   while (current_block != NULL) {
