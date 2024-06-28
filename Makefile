@@ -19,11 +19,17 @@ $(LIBFT_MALLOC_SYMLINK): $(LIBFT_MALLOC)
 	@ln -s $(LIBFT_MALLOC) $(LIBFT_MALLOC_SYMLINK)
 
 clean:
-	@rm -rf $(CMAKE_BUILD_DIR) $(LIBFT_MALLOC_SYMLINK) run_test
+	@rm -rf $(CMAKE_BUILD_DIR) 
+
+fclean: clean
+	@rm -rf $(LIBFT_MALLOC_SYMLINK) run_test
+
+
+re: fclean all
 
 test: 
 	make -C ./build/
 	make -C ./tests/
 	./run.sh ./tests/alloc_tester
 
-.PHONY: all clean test
+.PHONY: all clean test re fclean

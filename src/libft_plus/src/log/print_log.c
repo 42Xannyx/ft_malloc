@@ -20,7 +20,7 @@ void print_block(t_block *block) {
   printf("  \033[1;36mPrevious Block\033[0m: %p\n", (void *)block->prev);
 }
 
-void print_heap(t_heap *heap) {
+void print_heap(t_heap *heap, bool show_blocks) {
   printf("\033[1;35mHeap Address\033[0m: %p\n", (void *)heap);
   printf("  \033[1;36mTotal Size\033[0m: %zu bytes\n", heap->total_size);
   printf("  \033[1;36mFree Size\033[0m: %zu bytes\n", heap->free_size);
@@ -33,11 +33,13 @@ void print_heap(t_heap *heap) {
     print_block(heap->last_block);
   }
 
-  printf("  \n\033[1;36mBlocks:\033[0m\n");
-  t_block *current_block = heap->blocks;
-  while (current_block != NULL) {
-    print_block(current_block);
-    current_block = current_block->next;
+  if (show_blocks) {
+    printf("  \n\033[1;36mBlocks:\033[0m\n");
+    t_block *current_block = heap->blocks;
+    while (current_block != NULL) {
+      print_block(current_block);
+      current_block = current_block->next;
+    }
   }
 }
 #endif // DEBUG

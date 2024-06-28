@@ -55,10 +55,10 @@ t_block *extend_heap(t_heap **heap, const size_t size) {
 
 #ifdef DEBUG
   if ((*heap)->next) {
-    print_heap(*heap);
-    print_heap((*heap)->next);
+    print_heap(*heap, false);
+    print_heap((*heap)->next, false);
   } else {
-    print_heap(*heap);
+    print_heap(*heap, false);
   }
 #endif
 

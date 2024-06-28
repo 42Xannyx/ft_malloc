@@ -25,7 +25,7 @@ t_block *extend_blocks(t_heap **heap, const size_t size) {
   /*printf("\n-------------------\n");*/
   /*printf("\nNew blocks\n");*/
 
-  print_heap(*heap);
+  print_heap(*heap, false);
 #endif
 
   return block;
