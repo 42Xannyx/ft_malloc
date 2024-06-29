@@ -23,7 +23,7 @@ void print_block(t_block *block) {
 void print_heap(t_heap *heap, bool show_blocks) {
   printf("\033[1;35mHeap Address\033[0m: %p\n", (void *)heap);
   printf("  \033[1;36mTotal Size\033[0m: %zu bytes\n", heap->total_size);
-  printf("  \033[1;36mFree Size\033[0m: %zu bytes\n", heap->free_size);
+  printf("  \033[1;36mFree Size\033[0m: %lld bytes\n", heap->free_size);
   printf("  \033[1;36mBlock Count\033[0m: %zu\n", heap->block_count);
   printf("  \033[1;36mNext Heap\033[0m: %p\n", (void *)heap->next);
   printf("  \033[1;36mPrevious Heap\033[0m: %p\n", (void *)heap->prev);

@@ -29,29 +29,18 @@ int32_t main(void) {
   assert(ft_malloc(0) == NULL);
 
   /*char *ptr = ft_malloc(sizeof(char) * 320);*/
-  /*char *another_ptr = ft_malloc(sizeof(char) * 512);*/
+  char *another_ptr = ft_malloc(sizeof(char) * 35768);
 
-  stress_test();
-
-  // Should overflow
-  /*fill_string(ptr, 10);*/
-  /*fill_string(another_ptr, 500);*/
+  /*stress_test();*/
   /**/
+  /*fill_string(ptr, 10);*/
+  fill_string(another_ptr, 500);
+
   /*printf("Malloc: %s\n", ptr);*/
   /*printf("strlen: %ld\n", strlen(ptr));*/
-  /**/
-  /*printf("Malloc: %s\n", another_ptr);*/
-  /*printf("strlen: %ld\n", strlen(another_ptr));*/
 
-#ifdef linux
-  /*size = malloc_usable_size(ptr);*/
-  /*printf("Allocated memory size of ft_malloc: %zu bytes\n", size);*/
-#endif /* ifdef linux */
-
-#ifdef __APPLE__
-  /*size_t size = malloc_size(ptr);*/
-  /*printf("Allocated memory size of ft_malloc: %zu bytes\n", size);*/
-#endif /* ifdef linux */
+  printf("Malloc: %s\n", another_ptr);
+  printf("strlen: %ld\n", strlen(another_ptr));
 
   return 0;
 }

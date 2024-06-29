@@ -22,10 +22,12 @@ void *ft_malloc(size_t size) {
   }
 
   pthread_mutex_lock(&mutex);
-  const size_t aligned_size = align(size);
 
   t_block *block = NULL;
-  if (!heap) {
+  const size_t aligned_size = align(size);
+  const size_t determined_heap_size = determine_heap_size(aligned_size);
+
+  if (!heap || determined_heap_size > (size_t)SMALL_HEAP_ALLOCATION_SIZE) {
     printf("First extend of heap\n");
     block = extend_heap(&heap, aligned_size);
   } else {
@@ -36,11 +38,15 @@ void *ft_malloc(size_t size) {
       tmp_heap = tmp_heap->next;
     }
 
-    if (block_size > tmp_heap->free_size) {
+    if (block_size > (size_t)tmp_heap->free_size) {
+#ifdef DEBUG
       printf("Call mmap()\n");
+#endif
       block = extend_heap(&heap, aligned_size);
     } else {
+#ifdef DEBUG
       printf("Add blocks\n");
+#endif
       block = extend_blocks(&tmp_heap, aligned_size);
       heap = tmp_heap;
     }

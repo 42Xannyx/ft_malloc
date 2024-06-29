@@ -25,6 +25,10 @@ t_block *add_block(t_heap **heap, size_t size);
 
 __attribute__((warn_unused_result)) static inline size_t
 determine_amount_blocks(size_t n) {
+  if (n > (size_t)SMALL_HEAP_ALLOCATION_SIZE) {
+    return 1;
+  }
+
   size_t amount = n / SMALL_BLOCK_SIZE;
 
   if (n % SMALL_BLOCK_SIZE > 0) {

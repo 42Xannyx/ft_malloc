@@ -41,7 +41,7 @@ typedef struct block {
  */
 typedef struct heap {
   size_t total_size;   /**< Total size of the heap. */
-  size_t free_size;    /**< Size of the free memory in the heap. */
+  int64_t free_size;   /**< Size of the free memory in the heap. */
   size_t block_count;  /**< Number of blocks in the heap. */
   t_block *last_block; /**< Pointer to the last block in the heap. */
   t_block *blocks;     /**< Pointer to the first block in the heap. */
@@ -71,7 +71,10 @@ determine_block_size(size_t n) {
   if (n <= (size_t)TINY_BLOCK_SIZE)
     return TINY_BLOCK_SIZE;
 
-  return SMALL_BLOCK_SIZE;
+  if (n <= (size_t)SMALL_BLOCK_SIZE)
+    return SMALL_BLOCK_SIZE;
+
+  return n;
 }
 
 __attribute__((warn_unused_result)) static inline size_t
