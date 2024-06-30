@@ -52,9 +52,10 @@ void *ft_malloc(size_t size) {
     }
   }
 
-#ifdef DEBUG
-  /*print_heap(heap);*/
-#endif
+  if (!block) {
+    pthread_mutex_unlock(&mutex);
+    return NULL;
+  }
 
   pthread_mutex_unlock(&mutex);
   return (void *)(block + 1);

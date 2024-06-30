@@ -30,6 +30,9 @@ int32_t main(void) {
 
   /*char *ptr = ft_malloc(sizeof(char) * 320);*/
   char *another_ptr = ft_malloc(sizeof(char) * 35768);
+  char *anot = ft_malloc(sizeof(char) * 35768);
+
+  (void)anot;
 
   /*stress_test();*/
   /**/
