@@ -78,17 +78,17 @@ determine_block_size(size_t n) {
 __attribute__((warn_unused_result)) static inline size_t
 determine_total_block_size(size_t n) {
   size_t total_size = 0;
-  size_t remaining = n;
-  const size_t TINY_USABLE = TINY_BLOCK_SIZE - sizeof(t_block);
-  const size_t SMALL_USABLE = SMALL_BLOCK_SIZE - sizeof(t_block);
+  int32_t remaining = n;
+  int32_t TINY = TINY_BLOCK_SIZE - sizeof(t_block);
+  int32_t SMALL = SMALL_BLOCK_SIZE - sizeof(t_block);
 
-  while (remaining > 0) {
-    if (remaining <= TINY_USABLE) {
-      total_size += TINY_BLOCK_SIZE;
-      remaining = (remaining > TINY_USABLE) ? (remaining - TINY_USABLE) : 0;
+  while (remaining >= 0) {
+    if (remaining <= TINY) {
+      remaining = remaining - TINY;
+      total_size = total_size + TINY;
     } else {
-      total_size += SMALL_BLOCK_SIZE;
-      remaining = (remaining > SMALL_USABLE) ? (remaining - SMALL_USABLE) : 0;
+      remaining = remaining - SMALL;
+      total_size = total_size + SMALL;
     }
   }
 

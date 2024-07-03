@@ -12,8 +12,8 @@
 #include <string.h>
 
 void stress_test(void) {
-  for (int i = 0; i < 65; i++) {
-    ft_malloc(sizeof(char) * 248);
+  for (int i = 0; i < 86; i++) {
+    ft_malloc(sizeof(char) * 128);
   }
 }
 
@@ -28,21 +28,21 @@ void fill_string(char *ptr, int64_t n) {
 int32_t main(void) {
   assert(ft_malloc(0) == NULL);
 
-  char *another_ptr = ft_malloc(sizeof(char) * 510);
-  /*char *anot = ft_malloc(sizeof(char) * 35768);*/
-  /**/
+  /*char *another_ptr = ft_malloc(sizeof(char) * 510);*/
+  /*char *anot = ft_malloc(sizeof(char) * 500);*/
+
   /*(void)anot;*/
 
-  /*stress_test();*/
-  /**/
+  stress_test();
+
   /*fill_string(ptr, 10);*/
-  fill_string(another_ptr, 500);
+  /*fill_string(another_ptr, 500);*/
 
   /*printf("Malloc: %s\n", ptr);*/
   /*printf("strlen: %ld\n", strlen(ptr));*/
 
-  printf("Malloc: %s\n", another_ptr);
-  printf("strlen: %ld\n", strlen(another_ptr));
+  /*printf("Malloc: %s\n", another_ptr);*/
+  /*printf("strlen: %ld\n", strlen(another_ptr));*/
 
   return 0;
 }
