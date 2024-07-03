@@ -1,6 +1,7 @@
 ifeq ($(HOSTTYPE),)
 HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
+
 CMAKE_BUILD_DIR := build
 LIBFT_MALLOC := $(CMAKE_BUILD_DIR)/libft_malloc_$(HOSTTYPE).so 
 LIBFT_MALLOC_SYMLINK := libft_malloc.so

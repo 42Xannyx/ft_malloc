@@ -4,10 +4,10 @@ project(ft_malloc)
 # set(CMAKE_C_STANDARD 23)
 
 option(DEBUG "Build with debug information" OFF)
-file(GLOB_RECURSE SOURCES "src/*.c")
+file(GLOB_RECURSE SOURCES "src/**/*.c")
 
-file(GLOB_RECURSE ALLOCATOR "src/*.c")
-add_library(allocator STATIC ${ALLOCATOR})
+file(GLOB_RECURSE LIBFT_PLUS_SOURCES "src/*.c")
+add_library(libft_plus STATIC ${LIBFT_PLUS_SOURCES})
 
 if(NOT DEFINED ENV{HOSTTYPE})
   execute_process(
@@ -58,7 +58,7 @@ else()
 endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/lib/libft
-                    ${PROJECT_SOURCE_DIR}/src/)
+                    ${PROJECT_SOURCE_DIR}/src/libft_plus)
 
 add_custom_target(
   BuildLibft ALL
@@ -70,9 +70,9 @@ add_library(libft STATIC IMPORTED)
 set_property(TARGET libft PROPERTY IMPORTED_LOCATION
                                    ${PROJECT_SOURCE_DIR}/lib/libft/libft.a)
 
-add_dependencies(${LIBRARY_NAME} BuildLibft allocator)
+add_dependencies(${LIBRARY_NAME} BuildLibft libft_plus)
 
-target_link_libraries(${LIBRARY_NAME} libft allocator)
+target_link_libraries(${LIBRARY_NAME} libft libft_plus)
 include_directories(${PROJECT_SOURCE_DIR}/lib/libft/INC/
                     ${PROJECT_SOURCE_DIR}/src/inc/)
 
@@ -80,4 +80,5 @@ if(DEBUG)
   target_link_options(${LIBRARY_NAME} PRIVATE -fsanitize=address)
 endif()
 
+# Print out the compile options for verification
 message(STATUS "CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")

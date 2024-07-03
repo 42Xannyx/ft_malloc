@@ -1,9 +1,15 @@
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 
-#ifdef DEBUG
+#include "alloc.h"
+
 #define STDOUT_FILENO 1
 #define BUFFER_SIZE 256
 
+#ifdef DEBUG
 static void write_str(const char *str) {
   write(STDOUT_FILENO, str, strlen(str));
 }

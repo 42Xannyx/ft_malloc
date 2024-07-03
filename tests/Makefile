@@ -9,10 +9,8 @@ LIB_NAME = ft_malloc
 LIB_FILE = $(LIB_PATH)/lib$(LIB_NAME).so
 CFLAGS = -Wall -Wextra -Werror
 
-ifdef DEBUG
-    CFLAGS += -fsanitize=address -fno-omit-frame-pointer
-    LDFLAGS += -fsanitize=address
-endif
+CFLAGS += -fsanitize=address -fno-omit-frame-pointer
+LDFLAGS += -fsanitize=address
 
 all: $(NAME)
 
