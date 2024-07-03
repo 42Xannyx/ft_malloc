@@ -20,14 +20,16 @@ t_block *add_block(t_heap **heap, size_t size) {
   if (tmp_block) {
     current_position += sizeof(t_block) + tmp_block->size;
   } else {
-    current_position = (uintptr_t)(*heap) + sizeof(t_heap); // Skip metadata
+    current_position =
+        (uintptr_t)(*heap) + sizeof(t_heap); // Skip heap metadata
   }
 
   while (remaining > 0) {
     t_block *block = (t_block *)current_position;
-    size_t block_size = determine_block_size(remaining);
+    size_t total_block_size = determine_block_size(remaining);
+    size_t usable_size = total_block_size - sizeof(t_block);
 
-    block->size = block_size;
+    block->size = usable_size;
     block->inuse = true;
     block->next = NULL;
     block->prev = tmp_block;
@@ -43,8 +45,8 @@ t_block *add_block(t_heap **heap, size_t size) {
     }
 
     tmp_block = block;
-    remaining = remaining - block_size;
-    current_position = current_position + sizeof(t_block) + block_size;
+    remaining -= usable_size;
+    current_position += total_block_size;
   }
 
   return first_new_block;

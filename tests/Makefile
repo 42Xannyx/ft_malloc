@@ -1,5 +1,5 @@
 NAME = alloc_tester
-INC_PATH = ../src/libft_plus/inc/
+INC_PATH = ../src/inc/
 LIB_PATH = ..
 BUILD_DIR = obj
 SRC_DIR = src

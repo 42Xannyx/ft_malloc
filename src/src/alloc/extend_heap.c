@@ -11,8 +11,10 @@
 t_block *extend_heap(t_heap **heap, const size_t size) {
   // | Metadata + requested allocation |
   t_block *block = NULL;
-  const size_t total_size = sizeof(t_heap) + determine_heap_size(size);
+  const size_t amount_of_blocks = determine_amount_blocks(size);
   const size_t amount_of_block_size = determine_total_block_size(size);
+  const size_t total_size =
+      determine_heap_size(amount_of_block_size, amount_of_blocks);
 
   t_heap *tmp_heap = (t_heap *)mmap(NULL, total_size, PROT, MAP, -1, 0);
   if (tmp_heap == MAP_FAILED) {
@@ -21,8 +23,12 @@ t_block *extend_heap(t_heap **heap, const size_t size) {
   }
 
   tmp_heap->total_size = total_size;
-  tmp_heap->free_size = total_size - amount_of_block_size - sizeof(t_heap);
-  tmp_heap->block_count = determine_amount_blocks(size);
+
+  // I remove an addition 128 bytes, because I need to make space of
+  // sizeof(t_heap)
+  tmp_heap->free_size = total_size - amount_of_block_size - 128 -
+                        (sizeof(t_block) * amount_of_blocks);
+  tmp_heap->block_count = amount_of_blocks;
 
   if (!*heap) {
     tmp_heap->next = NULL;
@@ -58,7 +64,7 @@ t_block *extend_heap(t_heap **heap, const size_t size) {
     print_heap(*heap, false);
     print_heap((*heap)->next, false);
   } else {
-    print_heap(*heap, false);
+    print_heap(*heap, true);
   }
 #endif
 

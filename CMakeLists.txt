@@ -58,7 +58,7 @@ else()
 endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/lib/libft
-                    ${PROJECT_SOURCE_DIR}/src/libft_plus)
+                    ${PROJECT_SOURCE_DIR}/src/)
 
 add_custom_target(
   BuildLibft ALL

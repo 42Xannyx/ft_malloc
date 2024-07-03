@@ -28,11 +28,10 @@ void fill_string(char *ptr, int64_t n) {
 int32_t main(void) {
   assert(ft_malloc(0) == NULL);
 
-  /*char *ptr = ft_malloc(sizeof(char) * 320);*/
-  char *another_ptr = ft_malloc(sizeof(char) * 35768);
-  char *anot = ft_malloc(sizeof(char) * 35768);
-
-  (void)anot;
+  char *another_ptr = ft_malloc(sizeof(char) * 510);
+  /*char *anot = ft_malloc(sizeof(char) * 35768);*/
+  /**/
+  /*(void)anot;*/
 
   /*stress_test();*/
   /**/

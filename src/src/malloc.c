@@ -1,4 +1,5 @@
 #include <pthread.h>
+#include <sched.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -25,10 +26,12 @@ void *ft_malloc(size_t size) {
 
   t_block *block = NULL;
   const size_t aligned_size = align(size);
-  const size_t determined_heap_size = determine_heap_size(aligned_size);
+  const size_t amount_of_blocks = determine_block_size(aligned_size);
+  const size_t determined_heap_size =
+      determine_heap_size(aligned_size, amount_of_blocks);
 
   if (!heap || determined_heap_size > (size_t)SMALL_HEAP_ALLOCATION_SIZE) {
-    printf("First extend of heap\n");
+    printf("extending heap\n");
     block = extend_heap(&heap, aligned_size);
   } else {
     t_heap *tmp_heap = heap;

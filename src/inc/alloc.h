@@ -56,14 +56,15 @@ __attribute__((warn_unused_result)) static inline size_t align(size_t n) {
 }
 
 __attribute__((warn_unused_result)) static inline size_t
-determine_heap_size(size_t n) {
+determine_heap_size(size_t n, size_t amount_of_blocks) {
   if (n <= (size_t)TINY_HEAP_ALLOCATION_SIZE)
     return TINY_HEAP_ALLOCATION_SIZE;
 
   if (n <= (size_t)SMALL_HEAP_ALLOCATION_SIZE)
     return SMALL_HEAP_ALLOCATION_SIZE;
 
-  return n;
+  // Non-viable, creating exact size of user need
+  return n + sizeof(t_heap) + (amount_of_blocks * sizeof(t_block));
 }
 
 __attribute__((warn_unused_result)) static inline size_t
@@ -71,24 +72,23 @@ determine_block_size(size_t n) {
   if (n <= (size_t)TINY_BLOCK_SIZE)
     return TINY_BLOCK_SIZE;
 
-  if (n <= (size_t)SMALL_BLOCK_SIZE)
-    return SMALL_BLOCK_SIZE;
-
-  return n;
+  return SMALL_BLOCK_SIZE;
 }
 
 __attribute__((warn_unused_result)) static inline size_t
 determine_total_block_size(size_t n) {
   size_t total_size = 0;
-  int32_t remaining = n;
+  size_t remaining = n;
+  const size_t TINY_USABLE = TINY_BLOCK_SIZE - sizeof(t_block);
+  const size_t SMALL_USABLE = SMALL_BLOCK_SIZE - sizeof(t_block);
 
-  while (remaining >= 0) {
-    if (remaining <= SMALL_BLOCK_SIZE) {
-      remaining = remaining - SMALL_BLOCK_SIZE;
-      total_size = total_size + SMALL_BLOCK_SIZE;
+  while (remaining > 0) {
+    if (remaining <= TINY_USABLE) {
+      total_size += TINY_BLOCK_SIZE;
+      remaining = (remaining > TINY_USABLE) ? (remaining - TINY_USABLE) : 0;
     } else {
-      remaining = remaining - TINY_BLOCK_SIZE;
-      total_size = total_size + TINY_BLOCK_SIZE;
+      total_size += SMALL_BLOCK_SIZE;
+      remaining = (remaining > SMALL_USABLE) ? (remaining - SMALL_USABLE) : 0;
     }
   }
 
