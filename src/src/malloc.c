@@ -8,21 +8,14 @@
 #include "debug.h"
 #include "libft_plus.h"
 
-/*
- * man malloc: To avoid corruption in multithreaded applications, mutexes
- * are used internally to protect the memory-management data structures
- * employed by these functions.used internally to protect the
- * memory-management data structures employed by these functions.
- */
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-static t_heap *heap = NULL;
-
 void *ft_malloc(size_t size) {
   if (size <= 0) {
     return NULL;
   }
 
-  pthread_mutex_lock(&mutex);
+  t_heap *heap = g_heap;
+
+  pthread_mutex_lock(&g_mutex);
 
   t_block *block = NULL;
   const size_t aligned_size = align(size);
@@ -64,10 +57,12 @@ void *ft_malloc(size_t size) {
   }
 
   if (!block) {
-    pthread_mutex_unlock(&mutex);
+    pthread_mutex_unlock(&g_mutex);
     return NULL;
   }
 
-  pthread_mutex_unlock(&mutex);
+  g_heap = heap;
+
+  pthread_mutex_unlock(&g_mutex);
   return (void *)((char *)block + sizeof(t_block));
 }

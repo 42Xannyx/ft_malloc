@@ -29,13 +29,18 @@ int32_t main(void) {
   assert(ft_malloc(0) == NULL);
 
   char *ptr = ft_malloc(sizeof(char) * 10);
+  /*fill_string(ptr, 5);*/
+
+  ft_free(ptr);
+
+  ptr = ft_malloc(sizeof(char) * 10);
+
   /*char *anot = ft_malloc(sizeof(char) * 18723812738);*/
 
   /*(void)anot;*/
 
   /*stress_test();*/
 
-  fill_string(ptr, 10);
   /*fill_string(another_ptr, 500);*/
 
   /*printf("Malloc: %s\n", ptr);*/

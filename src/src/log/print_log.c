@@ -53,6 +53,12 @@ void print_sizes(void) {
 }
 
 void print_block(t_block *block) {
+  write_str("\033[1;33mMAGIC START\033[0m: ");
+  write_size_t(block->magic_start);
+  write_str("\n");
+
+  write_str("\033[1;33m------------------\033[0m\n");
+
   write_str("\033[1;33mBlock Address\033[0m: ");
   write_ptr((void *)block);
   write_str("\n");
@@ -75,6 +81,12 @@ void print_block(t_block *block) {
 
   write_str("  \033[1;36mPrevious Block\033[0m: ");
   write_ptr((void *)block->prev);
+  write_str("\n");
+
+  write_str("\033[1;33m------------------\033[0m\n");
+
+  write_str("\033[1;33mMAGIC END\033[0m: ");
+  write_size_t(block->magic_end);
   write_str("\n");
 }
 

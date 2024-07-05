@@ -34,6 +34,9 @@ t_block *add_block(t_heap **heap, size_t size) {
     block->next = NULL;
     block->prev = tmp_block;
 
+    block->magic_start = BLOCK_MAGIC;
+    block->magic_end = BLOCK_MAGIC;
+
     if (tmp_block) {
       tmp_block->next = block;
     } else {

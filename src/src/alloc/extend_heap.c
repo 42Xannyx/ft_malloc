@@ -63,7 +63,7 @@ t_block *extend_heap(t_heap **heap, const size_t size) {
     print_heap(*heap, false);
     print_heap((*heap)->next, false);
   } else {
-    print_heap(*heap, true);
+    print_heap(*heap, false);
   }
 #endif
 

@@ -3,8 +3,10 @@ INC_PATH = ../src/inc/
 LIB_PATH = ..
 BUILD_DIR = obj
 SRC_DIR = src
+
 SOURCES := $(wildcard $(SRC_DIR)/*.c)
 OBJECTS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SOURCES))
+
 LIB_NAME = ft_malloc
 LIB_FILE = $(LIB_PATH)/lib$(LIB_NAME).so
 CFLAGS = -Wall -Wextra -Werror

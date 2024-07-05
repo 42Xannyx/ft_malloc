@@ -1,6 +1,7 @@
 #ifndef LIBFT_PLUS_H
 #define LIBFT_PLUS_H
 
+#include <pthread.h>
 #include <stdint.h>
 #include <unistd.h>
 
@@ -12,12 +13,22 @@ void *ft_malloc(size_t size);
 void ft_free(void *ptr);
 void *ft_realloc(void *ptr, size_t size);
 
+/*
+ * man malloc: To avoid corruption in multithreaded applications, mutexes
+ * are used internally to protect the memory-management data structures
+ * employed by these functions.used internally to protect the
+ * memory-management data structures employed by these functions.
+ */
+extern pthread_mutex_t g_mutex;
+extern t_heap *g_heap;
+
 //******** Functions ********//
 
 __attribute__((warn_unused_result)) t_block *extend_heap(t_heap **heap,
                                                          size_t size);
 __attribute__((warn_unused_result)) t_block *extend_blocks(t_heap **heap,
                                                            size_t size);
+size_t list_len(void *lst);
 void initialize_heap(t_heap *heap);
 t_block *add_block(t_heap **heap, size_t size);
 
