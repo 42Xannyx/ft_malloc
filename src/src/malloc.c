@@ -31,7 +31,11 @@ void *ft_malloc(size_t size) {
       determine_heap_size(aligned_size, amount_of_blocks);
 
   if (!heap || (determined_heap_size > (size_t)SMALL_HEAP_ALLOCATION_SIZE)) {
+
+#ifdef DEBUG
     printf("extending heap\n");
+#endif
+
     block = extend_heap(&heap, aligned_size);
   } else {
     t_heap *tmp_heap = heap;
@@ -65,5 +69,5 @@ void *ft_malloc(size_t size) {
   }
 
   pthread_mutex_unlock(&mutex);
-  return (void *)(block + 1);
+  return (void *)((char *)block + sizeof(t_block));
 }
