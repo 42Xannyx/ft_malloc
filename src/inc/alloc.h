@@ -7,10 +7,19 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#ifdef __APPLE__
 #define TINY_HEAP_ALLOCATION_SIZE (4 * getpagesize())
 #define TINY_BLOCK_SIZE (TINY_HEAP_ALLOCATION_SIZE / 128)
 #define SMALL_HEAP_ALLOCATION_SIZE (8 * getpagesize())
 #define SMALL_BLOCK_SIZE (SMALL_HEAP_ALLOCATION_SIZE / 128)
+#endif
+
+#ifdef linux
+#define TINY_HEAP_ALLOCATION_SIZE (4 * sysconf(_SC_PAGESIZE))
+#define TINY_BLOCK_SIZE (TINY_HEAP_ALLOCATION_SIZE / 128)
+#define SMALL_HEAP_ALLOCATION_SIZE (8 * sysconf(_SC_PAGESIZE))
+#define SMALL_BLOCK_SIZE (SMALL_HEAP_ALLOCATION_SIZE / 128)
+#endif
 
 typedef intptr_t word_t;
 
