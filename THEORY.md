@@ -76,3 +76,7 @@ There is an additional pointer that always points to the last block of the heap 
 ![Untitled-2024-06-22-1416](https://github.com/42Xannyx/ft_malloc/assets/56308735/add8e84c-0621-4686-85ab-82befb0346a5)
 
 https://excalidraw.com/#json=Qwpz5ZCxd008nimZEBXAa,dTv6Y-HyQGlf0UCOmB54dw
+
+![Untitled-2024-07-03-1428](https://github.com/42Xannyx/ft_malloc/assets/56308735/af8d3d47-a9e8-4b16-804a-e3f1b6d29bb7)
+
+https://excalidraw.com/#json=Oaa_vINeSQtpJZFLG4Ytp,fOVeoWQupuZlPjeKUed89A
