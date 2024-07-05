@@ -10,7 +10,6 @@
 
 t_block *extend_heap(t_heap **heap, const size_t size) {
   // | Metadata + requested allocation |
-  t_block *block = NULL;
   const size_t amount_of_blocks = determine_amount_blocks(size);
   const size_t amount_of_block_size = determine_total_block_size(size);
   const size_t total_size =
@@ -23,21 +22,21 @@ t_block *extend_heap(t_heap **heap, const size_t size) {
   }
 
   tmp_heap->total_size = total_size;
-
   // I remove an addition 128 bytes, because I need to make space of
   // sizeof(t_heap)
   tmp_heap->free_size = total_size - amount_of_block_size - 128 -
                         (sizeof(t_block) * amount_of_blocks);
   tmp_heap->block_count = amount_of_blocks;
 
+  t_block *block = NULL;
   if (!*heap) {
     tmp_heap->next = NULL;
     tmp_heap->prev = NULL;
     (*heap) = tmp_heap;
 
-    block = add_block(heap, size);
+    block = add_block(heap, amount_of_block_size);
   } else {
-    block = add_block(&tmp_heap, size);
+    block = add_block(&tmp_heap, amount_of_block_size);
 
     tmp_heap->prev = *heap;
     (*heap)->next = tmp_heap;

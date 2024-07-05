@@ -30,26 +30,30 @@ void *ft_malloc(size_t size) {
   const size_t determined_heap_size =
       determine_heap_size(aligned_size, amount_of_blocks);
 
-  if (!heap || determined_heap_size > (size_t)SMALL_HEAP_ALLOCATION_SIZE) {
+  if (!heap || (determined_heap_size > (size_t)SMALL_HEAP_ALLOCATION_SIZE)) {
     printf("extending heap\n");
     block = extend_heap(&heap, aligned_size);
   } else {
     t_heap *tmp_heap = heap;
-    size_t block_size = determine_block_size(aligned_size);
+    size_t block_size = determine_total_block_size(aligned_size);
 
     while (tmp_heap->next) {
       tmp_heap = tmp_heap->next;
     }
 
-    if (block_size > (size_t)tmp_heap->free_size) {
+    if ((int64_t)block_size > tmp_heap->free_size) {
+
 #ifdef DEBUG
       printf("Call mmap()\n");
 #endif
+
       block = extend_heap(&heap, aligned_size);
     } else {
+
 #ifdef DEBUG
       printf("Add blocks\n");
 #endif
+
       block = extend_blocks(&tmp_heap, aligned_size);
       heap = tmp_heap;
     }

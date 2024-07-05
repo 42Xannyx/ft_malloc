@@ -12,8 +12,8 @@
 #include <string.h>
 
 void stress_test(void) {
-  for (int i = 0; i < 86; i++) {
-    ft_malloc(sizeof(char) * 128);
+  for (int i = 0; i < 127; i++) {
+    ft_malloc(sizeof(char) * 224);
   }
 }
 
