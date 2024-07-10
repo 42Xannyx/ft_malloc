@@ -3,30 +3,41 @@ HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 
 CMAKE_BUILD_DIR := build
-LIBFT_MALLOC := $(CMAKE_BUILD_DIR)/libft_malloc_$(HOSTTYPE).so 
+LIBFT_MALLOC := libft_malloc_$(HOSTTYPE).so 
 LIBFT_MALLOC_SYMLINK := libft_malloc.so
+SRC_DIR := src
+OBJ_DIR := obj
+INC_DIR := inc
+CFLAGS := -Wall -Wextra -Werror -pedantic -fPIC
+FLAGS_LIB := -shared
+SRCS := $(shell find $(SRC_DIR) -name '*.c')
+OBJS := $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-all: $(LIBFT_MALLOC_SYMLINK)
+all: $(LIBFT_MALLOC)
 
-$(CMAKE_BUILD_DIR):
-	@cmake -B $(CMAKE_BUILD_DIR) -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=YES
+$(OBJ_DIR):
+	mkdir -p $@
 
-$(LIBFT_MALLOC): $(CMAKE_BUILD_DIR)
-	@cmake --build $(CMAKE_BUILD_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
 
-$(LIBFT_MALLOC_SYMLINK): $(LIBFT_MALLOC)
-	@ln -sf $(LIBFT_MALLOC) $(LIBFT_MALLOC_SYMLINK)
-
-debug: 
-	@cmake -B $(CMAKE_BUILD_DIR) -S . -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=YES -DDEBUG=1 
-	@cmake --build $(CMAKE_BUILD_DIR) 
+$(LIBFT_MALLOC): $(OBJS)
+	$(CC) $(FLAGS_LIB) -o $@ $(OBJS)
+	@echo "$(LIBFT_MALLOC) compiled successfully"
 	@ln -sf $(LIBFT_MALLOC) $(LIBFT_MALLOC_SYMLINK)
 
 clean:
-	@rm -rf $(CMAKE_BUILD_DIR) 
+	rm -rf $(OBJ_DIR)
+	@echo "Object files cleaned"
 
 fclean: clean
-	@rm -f $(LIBFT_MALLOC_SYMLINK) run_test
+	rm -f $(LIBFT_MALLOC) $(LIBFT_MALLOC_SYMLINK)
+	@echo "$(LIBFT_MALLOC) and $(LIBFT_MALLOC_SYMLINK) removed"
+
+debug: CFLAGS += -g3 -fsanitize=address
+debug: LDFLAGS += -fsanitize=address
+debug: all
 
 re: fclean all
 
@@ -34,4 +45,4 @@ test: $(LIBFT_MALLOC)
 	make -C ./tests/
 	./run.sh ./tests/alloc_tester
 
-.PHONY: all clean test re fclean debug
+.PHONY: all clean fclean re debug test

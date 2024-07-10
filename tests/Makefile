@@ -1,5 +1,5 @@
 NAME = alloc_tester
-INC_PATH = ../src/inc/
+INC_PATH = ../inc/
 LIB_PATH = ..
 BUILD_DIR = obj
 SRC_DIR = src
@@ -11,8 +11,8 @@ LIB_NAME = ft_malloc
 LIB_FILE = $(LIB_PATH)/lib$(LIB_NAME).so
 CFLAGS = -Wall -Wextra -Werror
 
-CFLAGS += -fsanitize=address -fno-omit-frame-pointer
-LDFLAGS += -fsanitize=address
+# CFLAGS += -fsanitize=address -fno-omit-frame-pointer
+# LDFLAGS += -fsanitize=address
 
 all: $(NAME)
 

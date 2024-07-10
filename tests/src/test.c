@@ -31,9 +31,11 @@ int32_t main(void) {
   char *ptr = ft_malloc(sizeof(char) * 10);
   /*fill_string(ptr, 5);*/
 
-  ft_free(ptr);
+  (void)ptr;
 
-  ptr = ft_malloc(sizeof(char) * 10);
+  /*ft_free(ptr);*/
+  /**/
+  /*ptr = ft_malloc(sizeof(char) * 10);*/
 
   /*char *anot = ft_malloc(sizeof(char) * 18723812738);*/
 

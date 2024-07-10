@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.18)
 
 project(ft_malloc)
-# set(CMAKE_C_STANDARD 23)
+set(CMAKE_C_STANDARD 23)
 
 option(DEBUG "Build with debug information" OFF)
 file(GLOB_RECURSE SOURCES "src/**/*.c")
@@ -28,13 +28,13 @@ if(DEBUG)
   add_definitions(-DDEBUG)
   set(CMAKE_BUILD_TYPE Debug)
   set(CMAKE_C_FLAGS
-      "-g3 -fsanitize=address -Wall -Wextra -Werror -Wunused-result -Wunused-variable -pedantic"
+      "-g3 -fsanitize=address -Wall -Wextra -Werror -pedantic"
   )
 else()
   message(STATUS "Building in release mode")
   set(CMAKE_BUILD_TYPE Release)
   set(CMAKE_C_FLAGS
-      "-Ofast -Wall -Wextra -Werror -Wunused-result -Wunused-variable -pedantic"
+      "-Ofast -Wall -Wextra -Werror -pedantic"
   )
 endif()
 
@@ -43,19 +43,11 @@ set(LIBRARY_NAME "libft_malloc_${HOSTTYPE}")
 
 add_library(${LIBRARY_NAME} SHARED ${SOURCES})
 
-# Ensure the shared library uses the .so extension on all platforms
 set_target_properties(
   ${LIBRARY_NAME}
   PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
              OUTPUT_NAME "ft_malloc_${HOSTTYPE}"
              SUFFIX ".so")
-
-# Set rpath for macOS and Linux
-if(APPLE)
-  set_target_properties(${LIBRARY_NAME} PROPERTIES INSTALL_RPATH "@loader_path")
-else()
-  set_target_properties(${LIBRARY_NAME} PROPERTIES INSTALL_RPATH "\$ORIGIN")
-endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/lib/libft
                     ${PROJECT_SOURCE_DIR}/src/)
@@ -74,11 +66,6 @@ add_dependencies(${LIBRARY_NAME} BuildLibft libft_plus)
 
 target_link_libraries(${LIBRARY_NAME} libft libft_plus)
 include_directories(${PROJECT_SOURCE_DIR}/lib/libft/INC/
-                    ${PROJECT_SOURCE_DIR}/src/inc/)
+                    ${PROJECT_SOURCE_DIR}/inc/)
 
-if(DEBUG)
-  target_link_options(${LIBRARY_NAME} PRIVATE -fsanitize=address)
-endif()
-
-# Print out the compile options for verification
 message(STATUS "CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")

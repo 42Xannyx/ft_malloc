@@ -15,11 +15,20 @@ t_block *extend_heap(t_heap **heap, const size_t size) {
   const size_t total_size =
       determine_heap_size(amount_of_block_size, amount_of_blocks);
 
-  t_heap *tmp_heap = (t_heap *)mmap(NULL, total_size, PROT, MAP, -1, 0);
+#ifdef DEBUG
+  printf("Calling mmap with total_size %zu\n", total_size);
+  fflush(stdout);
+#endif
+  t_heap *tmp_heap = (t_heap *)mmap(NULL, total_size, PROT_READ | PROT_WRITE,
+                                    MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
   if (tmp_heap == MAP_FAILED) {
     perror("mmap()");
     return NULL;
   }
+#ifdef DEBUG
+  printf("mmap returned %p\n", (void *)tmp_heap);
+  fflush(stdout);
+#endif
 
   tmp_heap->total_size = total_size;
   // I remove an addition 128 bytes, because I need to make space of
