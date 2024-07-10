@@ -1,3 +1,4 @@
+#include "debug.h"
 #ifdef __APPLE__
 #include <malloc/malloc.h>
 #endif
@@ -10,6 +11,9 @@
 
 #include <assert.h>
 #include <string.h>
+
+/*void ft_malloc_usable_size(void *ptr) { t_block *block = ((t_block *)ptr) - 1;
+ * }*/
 
 void stress_test(void) {
   for (int i = 0; i < 126; i++) {
@@ -29,12 +33,12 @@ int32_t main(void) {
   assert(ft_malloc(0) == NULL);
 
   char *ptr = ft_malloc(sizeof(char) * 10);
-  /*fill_string(ptr, 5);*/
+  fill_string(ptr, 79);
 
-  (void)ptr;
+  ft_free(ptr);
 
-  /*ft_free(ptr);*/
-  /**/
+  printf("(void *) = %p\n", (void *)ptr);
+
   /*ptr = ft_malloc(sizeof(char) * 10);*/
 
   /*char *anot = ft_malloc(sizeof(char) * 18723812738);*/

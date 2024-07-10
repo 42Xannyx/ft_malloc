@@ -8,6 +8,7 @@
 #include "alloc.h"
 #include "debug.h"
 #include "libft_plus.h"
+#include "shared.h"
 
 void report_corruption(void) {
   const char *error_msg = "Memory corruption detected!\n";
@@ -44,6 +45,13 @@ void ft_free(void *ptr) {
 
   t_block *block = (t_block *)((char *)ptr - sizeof(t_block));
   t_heap *heap = g_heap;
+
+#ifdef DEBUG
+  printf("----- FT_FREE ------\n");
+  print_block(block);
+#endif
+
+  check_block_integrity(block);
 
   if (block->magic_start != BLOCK_MAGIC || block->magic_end != BLOCK_MAGIC) {
     report_corruption();

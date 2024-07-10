@@ -63,6 +63,10 @@ void *ft_malloc(size_t size) {
 
   g_heap = heap;
 
+  size_t *end_canary =
+      (size_t *)((char *)block + block->size + sizeof(t_block));
+  *end_canary = BLOCK_MAGIC;
+
   pthread_mutex_unlock(&g_mutex);
   return (void *)((char *)block + sizeof(t_block));
 }

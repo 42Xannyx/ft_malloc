@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <sys/mman.h>
+#include <unistd.h>
 
 #include "alloc.h"
 #include "debug.h"
@@ -25,6 +26,7 @@ t_block *extend_heap(t_heap **heap, const size_t size) {
     perror("mmap()");
     return NULL;
   }
+
 #ifdef DEBUG
   printf("mmap returned %p\n", (void *)tmp_heap);
   fflush(stdout);
@@ -75,6 +77,8 @@ t_block *extend_heap(t_heap **heap, const size_t size) {
     print_heap(*heap, false);
   }
 #endif
+
+  *(size_t *)((char *)(block + 1) + size - sizeof(size_t)) = BLOCK_MAGIC;
 
   return block;
 }

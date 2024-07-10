@@ -35,8 +35,7 @@ fclean: clean
 	rm -f $(LIBFT_MALLOC) $(LIBFT_MALLOC_SYMLINK)
 	@echo "$(LIBFT_MALLOC) and $(LIBFT_MALLOC_SYMLINK) removed"
 
-debug: CFLAGS += -g3 -fsanitize=address
-debug: LDFLAGS += -fsanitize=address
+debug: CFLAGS += -g3 -DDEBUG=1 
 debug: all
 
 re: fclean all
