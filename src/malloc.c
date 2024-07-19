@@ -1,7 +1,7 @@
 #include "alloc.h"
-#include "debug.h"
 #include "libft_plus.h"
 #include "shared.h"
+
 #include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -14,14 +14,14 @@ static t_block *allocate_memory(t_heap **heap, size_t aligned_size) {
     tmp_heap = tmp_heap->next;
   }
 
-  if ((int64_t)block_size > tmp_heap->free_size) {
-    DEBUG_PRINT_SIMPLE("Call mmap()");
-    return extend_heap(heap, aligned_size);
-  }
-
   if (any_block_not_inuse(*heap)) {
     DEBUG_PRINT_SIMPLE("Reuse blocks");
     return reuse_block(&tmp_heap, aligned_size);
+  }
+
+  if ((int64_t)block_size > tmp_heap->free_size) {
+    DEBUG_PRINT_SIMPLE("Call mmap()");
+    return extend_heap(heap, aligned_size);
   }
 
   DEBUG_PRINT_SIMPLE("Add blocks");
