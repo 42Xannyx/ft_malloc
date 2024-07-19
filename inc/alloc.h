@@ -23,18 +23,7 @@
 
 typedef intptr_t word_t;
 
-/*
- * Magic number used as a canary value to detect memory corruption.
- * Properties of 0xDEADBEEF:
- * 1. Memorable: Spells "DEAD BEEF" in hexadecimal.
- * 2. Unlikely to occur accidentally: Not a common bit pattern in memory.
- * 3. Detectable: Easy to spot in memory dumps or debugger output.
- * 4. 32-bit value: Aligns well with common architectures.
- * 5. Non-zero: Helps detect uninitialized memory issues.
- * Using this value at the start and end of memory blocks helps identify
- * buffer overflows, underflows, and use-after-free bugs.
- */
-#define BLOCK_MAGIC 0xDEADBEEF
+/* Let's say you allocate 10 bytes. I will give you 95 bytes to be used. */
 
 /**
  * @struct block
@@ -46,12 +35,10 @@ typedef intptr_t word_t;
  * whether the block is free.
  */
 typedef struct block {
-  size_t magic_start; /**< Canary at the start > */
   size_t size;        /**< Size of the block of memory. */
   bool inuse;         /**< Flag indicating whether the block is free. */
   struct block *next; /**< Pointer to the next block in the heap. */
   struct block *prev; /**< Pointer to the previous block in the heap. */
-  size_t magic_end;   /**< Canary at the end > */
 } t_block;
 
 /**

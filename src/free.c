@@ -48,20 +48,12 @@ void ft_free(void *ptr) {
 
 #ifdef DEBUG
   printf("----- FT_FREE ------\n");
-  print_block(block);
+  /*print_block(block);*/
 #endif
 
   check_block_integrity(block);
 
-  if (block->magic_start != BLOCK_MAGIC || block->magic_end != BLOCK_MAGIC) {
-    report_corruption();
-
-    pthread_mutex_unlock(&g_mutex);
-    return;
-  }
-
   size_t block_len = list_len(block);
-
   if (block_len == heap->block_count) {
     int32_t ret = destroy_heap(&heap);
 
@@ -73,21 +65,31 @@ void ft_free(void *ptr) {
       return;
     }
 
-    g_heap = NULL;
+    ptr = NULL;   /* Does not change anything for the user. This is just out
+                     of safety*/
+    block = NULL; /* Does not change anything for the user. This is just out
+                   of safety*/
+
+    // Set Global heap to NULL to show it does exist
+    heap = NULL;
+    g_heap = heap;
+
+#ifdef DEBUG
+    printf("BLOCK\n");
+    if (block) {
+      print_block(block);
+    }
+
+    if (heap) {
+      print_heap(heap, false);
+    }
+#endif
+
     pthread_mutex_unlock(&g_mutex);
     return;
   }
 
   block->inuse = false;
-
-#ifdef DEBUG
-  /*printf("BLOCK\n");*/
-  /*print_block(block);*/
-  /**/
-  /*if (heap) {*/
-  /*  print_heap(heap, false);*/
-  /*}*/
-#endif
 
   pthread_mutex_unlock(&g_mutex);
   return;
