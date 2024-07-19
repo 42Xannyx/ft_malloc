@@ -51,17 +51,18 @@ void *ft_malloc(size_t size) {
 
       block = extend_heap(&heap, aligned_size);
     } else {
-
-#ifdef DEBUG
-      printf("Add blocks\n");
-#endif
       bool inuse = any_block_not_inuse(heap);
 
       // Check if we can reuse a block
       if (inuse == true) {
-        printf("HEllo\n");
-        /*block = reuse_blocks(&tmp_heap, aligned_size);*/
+#ifdef DEBUG
+        printf("Reuse blocks\n");
+#endif
+        block = reuse_block(&tmp_heap, aligned_size);
       } else {
+#ifdef DEBUG
+        printf("Add blocks\n");
+#endif
         // Otherwise create new blocks
         block = extend_blocks(&tmp_heap, aligned_size);
       }

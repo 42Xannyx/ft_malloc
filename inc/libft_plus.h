@@ -32,6 +32,7 @@ size_t block_list_len(void *lst);
 size_t block_list_len_by_id(void *lst);
 void initialize_heap(t_heap *heap);
 t_block *add_block(t_heap **heap, size_t size);
+t_block *reuse_block(t_heap **heap, size_t size);
 
 //******** Inline Functions ********//
 
