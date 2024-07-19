@@ -57,8 +57,12 @@ void print_block(t_block *block) {
   write_ptr((void *)block);
   write_str("\n");
 
-  write_str("  \033[1;36mSize\033[0m: ");
-  write_size_t(block->size);
+  write_str("  \033[1;36mBlock id\033[0m: ");
+  write_size_t(block->_id);
+  write_str("\n");
+
+  write_str("  \033[1;36mSize (exc canary)\033[0m: ");
+  write_size_t(block->size - 1);
   write_str(" bytes\n");
 
   write_str("  \033[1;36mSize with metadata\033[0m: ");
@@ -83,8 +87,8 @@ void print_heap(t_heap *heap, bool show_blocks) {
   write_ptr((void *)heap);
   write_str("\n");
 
-  write_str("  \033[1;36mTotal Size\033[0m: ");
-  write_size_t(heap->total_size);
+  write_str("  \033[1;36mTotal Size (exc. metadata)\033[0m: ");
+  write_size_t(heap->total_size - 128);
   write_str(" bytes\n");
 
   write_str("  \033[1;36mFree Size\033[0m: ");

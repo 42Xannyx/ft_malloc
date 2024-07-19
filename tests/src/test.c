@@ -12,11 +12,8 @@
 #include <assert.h>
 #include <string.h>
 
-/*void ft_malloc_usable_size(void *ptr) { t_block *block = ((t_block *)ptr) - 1;
- * }*/
-
 void stress_test(void) {
-  for (int i = 0; i < 126; i++) {
+  for (int i = 0; i < 128; i++) {
     ft_malloc(sizeof(char) * 1);
   }
 }
@@ -32,12 +29,22 @@ void fill_string(char *ptr, int64_t n) {
 int32_t main(void) {
   assert(ft_malloc(0) == NULL);
 
-  char *ptr = ft_malloc(sizeof(char) * 10);
-  fill_string(ptr, 79);
+  /*char *ptr = ft_malloc(sizeof(char) * 10);*/
+  /*fill_string(ptr, 95); // 96 should abort*/
+  /*ft_free(ptr);*/
+  /**/
+  /*ptr = NULL;*/
 
-  ft_free(ptr);
+  char *anot_ptr = ft_malloc(sizeof(char) * 300);
+  fill_string(anot_ptr, 10);
+  char *anot_ptr1 = ft_malloc(sizeof(char) * 10);
+  fill_string(anot_ptr1, 10);
+  ft_free(anot_ptr1);
 
-  printf("(void *) = %p\n", (void *)ptr);
+  char *anot_ptr2 = ft_malloc(sizeof(char) * 10);
+  (void)anot_ptr2;
+
+  /*stress_test();*/
 
   /*ptr = ft_malloc(sizeof(char) * 10);*/
 

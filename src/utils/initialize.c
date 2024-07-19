@@ -1,3 +1,4 @@
+#include <bits/posix1_lim.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -6,6 +7,7 @@
 #include "debug.h"
 
 t_block *add_block(t_heap **heap, size_t size) {
+  static uint64_t id_counter;
   int64_t remaining = size;
   t_block *tmp_block = (*heap)->last_block;
   t_block *first_new_block = NULL;
@@ -29,6 +31,7 @@ t_block *add_block(t_heap **heap, size_t size) {
     size_t total_block_size = determine_block_size(remaining);
     size_t usable_size = total_block_size - sizeof(t_block);
 
+    block->_id = id_counter;
     block->size = usable_size;
     block->inuse = true;
     block->next = NULL;
@@ -49,5 +52,6 @@ t_block *add_block(t_heap **heap, size_t size) {
     current_position += total_block_size;
   }
 
+  id_counter = id_counter + 1;
   return first_new_block;
 }

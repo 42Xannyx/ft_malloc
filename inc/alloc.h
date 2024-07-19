@@ -48,6 +48,7 @@ typedef intptr_t word_t;
  * whether the block is free.
  */
 typedef struct block {
+  ssize_t _id;        /**< A random id. */
   size_t size;        /**< Size of the block of memory. */
   bool inuse;         /**< Flag indicating whether the block is free. */
   struct block *next; /**< Pointer to the next block in the heap. */
@@ -81,14 +82,15 @@ __attribute__((warn_unused_result)) static inline size_t align(size_t n) {
 
 __attribute__((warn_unused_result)) static inline size_t
 determine_heap_size(size_t n, size_t amount_of_blocks) {
+  if (n > (size_t)SMALL_HEAP_ALLOCATION_SIZE) {
+    // Non-viable, creating exact size of user need
+    return n + sizeof(t_heap) + (amount_of_blocks * sizeof(t_block));
+  }
+
   if (n <= (size_t)TINY_BLOCK_SIZE - sizeof(t_block))
     return TINY_HEAP_ALLOCATION_SIZE;
 
-  if (n <= (size_t)SMALL_BLOCK_SIZE - sizeof(t_block))
-    return SMALL_HEAP_ALLOCATION_SIZE;
-
-  // Non-viable, creating exact size of user need
-  return n + sizeof(t_heap) + (amount_of_blocks * sizeof(t_block));
+  return SMALL_HEAP_ALLOCATION_SIZE;
 }
 
 __attribute__((warn_unused_result)) static inline size_t
