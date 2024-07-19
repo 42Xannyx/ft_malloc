@@ -80,3 +80,21 @@ https://excalidraw.com/#json=Qwpz5ZCxd008nimZEBXAa,dTv6Y-HyQGlf0UCOmB54dw
 ![Untitled-2024-07-03-1428](https://github.com/42Xannyx/ft_malloc/assets/56308735/af8d3d47-a9e8-4b16-804a-e3f1b6d29bb7)
 
 https://excalidraw.com/#json=Oaa_vINeSQtpJZFLG4Ytp,fOVeoWQupuZlPjeKUed89A
+
+### Limitations
+
+#### Heap Overflows
+We are not able to tell the kernel directly that we have a heap overflow. Instead, when `ft_free` or `ft_malloc` is called, it first checks if there is an overflow. If an overflow is detected, the program aborts.
+
+#### Actual Allocation
+`ft_free` does not actually free memory in the traditional sense. It only changes some data in the block to mark it as available for the next use of `malloc`. In theory, you would still be able to use the pointer after it has been freed. 
+
+To ensure memory safety:
+- The user needs to set the pointer to NULL once it is freed.
+- This practice helps prevent accidental use of the freed memory.
+
+#### Memory Management
+To clarify, this implementation does not leak memory:
+- The pointer is kept in the global heap structure.
+- When a block is freed, it will be reused for the next allocation instead of creating a new block.
+- This approach allows for efficient memory reuse within the custom allocator.
