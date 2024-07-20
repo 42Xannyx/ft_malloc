@@ -1,4 +1,5 @@
 #include "alloc.h"
+#include "debug.h"
 #include "libft_plus.h"
 #include "shared.h"
 
