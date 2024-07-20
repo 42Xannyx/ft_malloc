@@ -6,6 +6,7 @@
 #include <malloc.h>
 #endif
 
+#include "debug.h"
 #include "libft_plus.h"
 
 #include <assert.h>
@@ -34,9 +35,45 @@ int32_t main(void) {
   /**/
   /*ptr = NULL;*/
 
-  // 33000 + sizeof(t_heap) + sizeof(t_block) * amount_of_blocks
-  char *anot_ptr = ft_malloc(sizeof(char) * 32896);
-  fill_string(anot_ptr, 10);
+  /* Test 1
+   * Should return a ptr with a total of 172 blocks.
+   * 171 SMALL Blocks & 1 TINY Block
+   *
+   * It should create a completly new heap, seperated from the others.
+   *
+   * It should actually allocate: amount_of_user + sizeof(heap_struct) +
+   * (amount_of_blocks * sizeof(t_block))
+   *
+   * So by the time of writing:
+   * 32896 + 64 + (172 * 64) = 43968
+   */
+  char *test_1 = ft_malloc(sizeof(char) * 32896);
+  fill_string(test_1, 10);
+
+#ifdef DEBUG
+  print_block((t_block *)test_1);
+#endif
+
+  ft_free(test_1);
+  test_1 = NULL;
+
+  /* END TEST 1 */
+
+  /* Test 2
+   * Same as last run, but shows that the last heap is gone, because of ft_free
+   */
+  char *test_2 = ft_malloc(sizeof(char) * 32896);
+  fill_string(test_2, 10);
+
+#ifdef DEBUG
+  print_block((t_block *)test_1);
+#endif
+
+  ft_free(test_2);
+  test_1 = NULL;
+
+  /* END TEST 2 */
+
   /*char *anot_ptr1 = ft_malloc(sizeof(char) * 10);*/
   /*fill_string(anot_ptr1, 10);*/
   /*ft_free(anot_ptr1);*/

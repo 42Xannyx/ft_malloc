@@ -114,8 +114,8 @@ void print_heap(t_heap *heap, bool show_blocks) {
   write_ptr((void *)heap);
   write_str("\n");
 
-  write_str("  \033[1;36mTotal Size (exc. metadata)\033[0m: ");
-  write_size_t(heap->total_size - 128);
+  write_str("  \033[1;36mTotal Size (inc. metadata)\033[0m: ");
+  write_size_t(heap->total_size);
   write_str(" bytes\n");
 
   write_str("  \033[1;36mFree Size\033[0m: ");
