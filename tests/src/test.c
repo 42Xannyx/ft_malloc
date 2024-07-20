@@ -1,4 +1,3 @@
-#include "debug.h"
 #ifdef __APPLE__
 #include <malloc/malloc.h>
 #endif
@@ -35,14 +34,15 @@ int32_t main(void) {
   /**/
   /*ptr = NULL;*/
 
-  char *anot_ptr = ft_malloc(sizeof(char) * 300);
+  // 33000 + sizeof(t_heap) + sizeof(t_block) * amount_of_blocks
+  char *anot_ptr = ft_malloc(sizeof(char) * 33000);
   fill_string(anot_ptr, 10);
-  char *anot_ptr1 = ft_malloc(sizeof(char) * 10);
-  fill_string(anot_ptr1, 10);
-  ft_free(anot_ptr1);
-
-  char *anot_ptr2 = ft_malloc(sizeof(char) * 10);
-  (void)anot_ptr2;
+  /*char *anot_ptr1 = ft_malloc(sizeof(char) * 10);*/
+  /*fill_string(anot_ptr1, 10);*/
+  /*ft_free(anot_ptr1);*/
+  /**/
+  /*char *anot_ptr2 = ft_malloc(sizeof(char) * 10);*/
+  /*(void)anot_ptr2;*/
 
   /*stress_test();*/
 

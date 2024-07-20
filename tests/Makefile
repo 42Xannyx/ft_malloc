@@ -10,9 +10,7 @@ OBJECTS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SOURCES))
 LIB_NAME = ft_malloc
 LIB_FILE = $(LIB_PATH)/lib$(LIB_NAME).so
 CFLAGS = -Wall -Wextra -Werror
-
-# CFLAGS += -fsanitize=address -fno-omit-frame-pointer
-# LDFLAGS += -fsanitize=address
+LDFLAGS += -fsanitize=address
 
 all: $(NAME)
 

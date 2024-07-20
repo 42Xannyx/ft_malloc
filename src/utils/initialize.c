@@ -5,8 +5,9 @@
 #include "alloc.h"
 #include "debug.h"
 
+static uint64_t id_counter;
+
 t_block *add_block(t_heap **heap, size_t size) {
-  static uint64_t id_counter;
   int64_t remaining = size;
   t_block *tmp_block = (*heap)->last_block;
   t_block *first_new_block = NULL;
@@ -56,7 +57,6 @@ t_block *add_block(t_heap **heap, size_t size) {
 }
 
 t_block *reuse_block(t_heap **heap, size_t size) {
-  static uint64_t id_counter;
   int64_t remaining = size;
   t_block *tmp_block = (*heap)->last_block;
   t_block *first_new_block = NULL;

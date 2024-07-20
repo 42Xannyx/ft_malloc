@@ -74,6 +74,14 @@ typedef struct heap {
   struct heap *prev;   /**< Pointer to the previous heap. */
 } t_heap;
 
+// Instead of passing seperate integers. We use a struct to count the amount of
+// blocks per block size
+typedef struct s_amount {
+  size_t tiny;
+  size_t small;
+  size_t large;
+} t_amount;
+
 // ****** Functions ****** //
 
 __attribute__((warn_unused_result)) static inline size_t align(size_t n) {
@@ -99,6 +107,31 @@ determine_block_size(size_t n) {
     return TINY_BLOCK_SIZE;
 
   return SMALL_BLOCK_SIZE;
+}
+
+__attribute__((warn_unused_result)) static inline struct s_amount
+count_blocks(size_t n) {
+  struct s_amount count = {0, 0, 0};
+
+  if (n > (size_t)SMALL_HEAP_ALLOCATION_SIZE) {
+    count.large++;
+    return count;
+  }
+
+  while (n > 0) {
+    if (n <= (size_t)TINY_BLOCK_SIZE - sizeof(t_block)) {
+      count.tiny++;
+      n = 0;
+    } else if (n <= (size_t)SMALL_BLOCK_SIZE - sizeof(t_block)) {
+      count.small++;
+      n = 0;
+    } else {
+      count.small++;
+      n = n - (SMALL_BLOCK_SIZE - sizeof(t_block));
+    }
+  }
+
+  return count;
 }
 
 __attribute__((warn_unused_result)) static inline size_t

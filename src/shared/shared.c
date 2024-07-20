@@ -27,15 +27,16 @@ bool blocks_inuse(t_heap *heap) {
   return false;
 }
 
-bool any_block_not_inuse(t_heap *heap) {
+size_t amount_of_unused_blocks(t_heap *heap) {
+  size_t len = 0;
   t_block *block = heap->blocks;
 
   while (block) {
     if (block->inuse == false) {
-      return true;
+      len = len + 1;
     }
     block = block->next;
   }
 
-  return false;
+  return len;
 }
