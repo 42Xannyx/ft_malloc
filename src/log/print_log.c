@@ -65,17 +65,13 @@ void print_block_count(t_amount block_count) {
   printf("  Count: %zu\n", block_count.small);
   printf("  Total: %zu bytes\n", block_count.small * SMALL_BLOCK_SIZE);
 
-  printf("\033[1;31mLARGE Blocks\033[0m:\n");
-  printf("  Count: %zu\n", block_count.large);
-
   printf("\nAllocation Sizes:\n");
   printf("  \033[1;34mTINY_HEAP_ALLOCATION_SIZE\033[0m: %d bytes\n",
          TINY_HEAP_ALLOCATION_SIZE);
   printf("  \033[1;32mSMALL_HEAP_ALLOCATION_SIZE\033[0m: %d bytes\n",
          SMALL_HEAP_ALLOCATION_SIZE);
 
-  printf("\nTotal Blocks: %zu\n",
-         block_count.tiny + block_count.small + block_count.large);
+  printf("\nTotal Blocks: %zu\n", block_count.tiny + block_count.small);
   printf("Total Allocated: %zu bytes\n",
          (block_count.tiny * TINY_BLOCK_SIZE) +
              (block_count.small * SMALL_BLOCK_SIZE));

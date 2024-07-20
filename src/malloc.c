@@ -6,19 +6,28 @@
 #include <stdint.h>
 #include <stdio.h>
 
+bool create_large_heap(const size_t n) {
+  if (n > (size_t)SMALL_HEAP_ALLOCATION_SIZE) {
+    return true;
+  }
+
+  return false;
+}
+
 static t_block *allocate_memory(t_heap **heap, size_t aligned_size) {
   t_heap *tmp_heap = *heap;
-  const size_t block_size = determine_total_block_size(aligned_size);
   const t_amount amount_blocks = count_blocks(aligned_size);
+  const size_t block_size = get_total_size(amount_blocks);
+  const bool is_large = create_large_heap(aligned_size);
 
   while (tmp_heap && tmp_heap->next) {
     tmp_heap = tmp_heap->next;
   }
 
   // Heap is empty or is bigger than the acceptable heap size
-  if (!g_heap || amount_blocks.large > 0) {
+  if (!g_heap || is_large == true) {
     DEBUG_PRINT_SIMPLE("Extending heap by being empty or a LARGE allocation");
-    return extend_heap(&g_heap, aligned_size);
+    return extend_heap(&g_heap, amount_blocks, aligned_size);
   }
 
   // Blocks are not in use and can be reused
@@ -31,7 +40,7 @@ static t_block *allocate_memory(t_heap **heap, size_t aligned_size) {
   // There is no more free space to allocate new blocks
   if ((int64_t)block_size > tmp_heap->free_size) {
     DEBUG_PRINT_SIMPLE("Call mmap()");
-    return extend_heap(heap, aligned_size);
+    return extend_heap(heap, amount_blocks, aligned_size);
   }
 
   // Add new blocks to the heap

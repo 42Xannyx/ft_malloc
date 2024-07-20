@@ -1,5 +1,6 @@
 #include "libft_plus.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 t_heap *g_heap = NULL;

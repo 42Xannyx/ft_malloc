@@ -9,15 +9,13 @@
 #define PROT (PROT_READ | PROT_WRITE)
 #define MAP (MAP_ANONYMOUS | MAP_PRIVATE)
 
-t_block *extend_heap(t_heap **heap, const size_t size) {
+t_block *extend_heap(t_heap **heap, t_amount amount_blocks, const size_t size) {
   // | Metadata + requested allocation |
-  const size_t amount_of_blocks = determine_amount_blocks(size);
+  const size_t block_count = get_amount_blocks(amount_blocks);
   const size_t amount_of_block_size = determine_total_block_size(size);
-  const size_t total_size =
-      determine_heap_size(amount_of_block_size, amount_of_blocks);
+  const size_t total_size = get_total_size(amount_blocks);
 
   DEBUG_PRINT("Calling mmap with total_size %zu\n", total_size);
-  printf("sizeof(t_block) = %ld\n", sizeof(t_block));
 
   t_heap *tmp_heap = (t_heap *)mmap(NULL, total_size, PROT, MAP, -1, 0);
   if (tmp_heap == MAP_FAILED) {
@@ -28,11 +26,9 @@ t_block *extend_heap(t_heap **heap, const size_t size) {
   DEBUG_PRINT("mmap returned %p\n", (void *)tmp_heap);
 
   tmp_heap->total_size = total_size;
-  // I remove an addition 128 bytes, because I need to make space of
-  // sizeof(t_heap)
-  tmp_heap->free_size = total_size - amount_of_block_size - 128 -
-                        (sizeof(t_block) * amount_of_blocks);
-  tmp_heap->block_count = amount_of_blocks;
+  tmp_heap->free_size = total_size - amount_of_block_size - SIZEOF_HEAP -
+                        (SIZEOF_BLOCK * block_count);
+  tmp_heap->block_count = block_count;
 
   t_block *block = NULL;
   if (!*heap) {

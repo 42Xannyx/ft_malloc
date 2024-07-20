@@ -11,6 +11,7 @@ t_block *add_block(t_heap **heap, size_t size) {
   int64_t remaining = size;
   t_block *tmp_block = (*heap)->last_block;
   t_block *first_new_block = NULL;
+  size_t sizeof_block = align_sizeof(sizeof(t_block));
 
   if (tmp_block) {
     while (tmp_block->next) {
@@ -29,7 +30,7 @@ t_block *add_block(t_heap **heap, size_t size) {
   while (remaining > 0) {
     t_block *block = (t_block *)current_position;
     size_t total_block_size = determine_block_size(remaining);
-    size_t usable_size = total_block_size - sizeof(t_block);
+    size_t usable_size = total_block_size - sizeof_block;
 
     block->_id = id_counter;
     block->size = usable_size;

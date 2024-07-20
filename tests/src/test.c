@@ -35,7 +35,7 @@ int32_t main(void) {
   /*ptr = NULL;*/
 
   // 33000 + sizeof(t_heap) + sizeof(t_block) * amount_of_blocks
-  char *anot_ptr = ft_malloc(sizeof(char) * 33000);
+  char *anot_ptr = ft_malloc(sizeof(char) * 32896);
   fill_string(anot_ptr, 10);
   /*char *anot_ptr1 = ft_malloc(sizeof(char) * 10);*/
   /*fill_string(anot_ptr1, 10);*/

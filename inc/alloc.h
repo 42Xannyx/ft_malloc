@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <unistd.h>
 
 #ifdef __APPLE__
@@ -79,7 +78,6 @@ typedef struct heap {
 typedef struct s_amount {
   size_t tiny;
   size_t small;
-  size_t large;
 } t_amount;
 
 // ****** Functions ****** //
@@ -89,16 +87,45 @@ __attribute__((warn_unused_result)) static inline size_t align(size_t n) {
 }
 
 __attribute__((warn_unused_result)) static inline size_t
-determine_heap_size(size_t n, size_t amount_of_blocks) {
-  if (n > (size_t)SMALL_HEAP_ALLOCATION_SIZE) {
-    // Non-viable, creating exact size of user need
-    return n + sizeof(t_heap) + (amount_of_blocks * sizeof(t_block));
+align_sizeof(size_t n) {
+  n--;
+  n |= n >> 1;
+  n |= n >> 2;
+  n |= n >> 4;
+  n |= n >> 8;
+  n |= n >> 16;
+#if SIZE_MAX > UINT32_MAX
+  n |= n >> 32;
+#endif
+  n++;
+  return n;
+}
+
+// ****** Defaults ****** //
+
+#define SIZEOF_BLOCK (align_sizeof(sizeof(t_block)))
+#define SIZEOF_HEAP (align_sizeof(sizeof(t_heap)))
+#define TINY_USABLE (TINY_BLOCK_SIZE - SIZEOF_BLOCK)
+#define SMALL_USABLE (SMALL_BLOCK_SIZE - SIZEOF_BLOCK)
+
+// ********************* //
+
+__attribute__((warn_unused_result)) static inline size_t
+determine_total_block_size(size_t n) {
+  size_t total_size = 0;
+  int32_t remaining = n;
+
+  while (remaining > 0) {
+    if (remaining <= (int32_t)TINY_USABLE) {
+      remaining = remaining - TINY_USABLE;
+      total_size = total_size + TINY_USABLE;
+    } else {
+      remaining = remaining - SMALL_USABLE;
+      total_size = total_size + SMALL_USABLE;
+    }
   }
 
-  if (n <= (size_t)TINY_BLOCK_SIZE - sizeof(t_block))
-    return TINY_HEAP_ALLOCATION_SIZE;
-
-  return SMALL_HEAP_ALLOCATION_SIZE;
+  return total_size;
 }
 
 __attribute__((warn_unused_result)) static inline size_t
@@ -109,25 +136,18 @@ determine_block_size(size_t n) {
   return SMALL_BLOCK_SIZE;
 }
 
-__attribute__((warn_unused_result)) static inline struct s_amount
+__attribute__((warn_unused_result)) static inline t_amount
 count_blocks(size_t n) {
-  struct s_amount count = {0, 0, 0};
+  t_amount count = {0, 0};
 
-  if (n > (size_t)SMALL_HEAP_ALLOCATION_SIZE) {
-    count.large++;
-    return count;
-  }
+  count.small = n / SMALL_USABLE;
+  size_t remaining = n % SMALL_USABLE;
 
-  while (n > 0) {
-    if (n <= (size_t)TINY_BLOCK_SIZE - sizeof(t_block)) {
-      count.tiny++;
-      n = 0;
-    } else if (n <= (size_t)SMALL_BLOCK_SIZE - sizeof(t_block)) {
-      count.small++;
-      n = 0;
+  if (remaining > 0) {
+    if (remaining <= TINY_USABLE) {
+      count.tiny = 1;
     } else {
       count.small++;
-      n = n - (SMALL_BLOCK_SIZE - sizeof(t_block));
     }
   }
 
@@ -135,23 +155,9 @@ count_blocks(size_t n) {
 }
 
 __attribute__((warn_unused_result)) static inline size_t
-determine_total_block_size(size_t n) {
-  size_t total_size = 0;
-  int32_t remaining = n;
-  int32_t TINY = TINY_BLOCK_SIZE - sizeof(t_block);
-  int32_t SMALL = SMALL_BLOCK_SIZE - sizeof(t_block);
-
-  while (remaining > 0) {
-    if (remaining <= TINY) {
-      remaining = remaining - TINY;
-      total_size = total_size + TINY;
-    } else {
-      remaining = remaining - SMALL;
-      total_size = total_size + SMALL;
-    }
-  }
-
-  return total_size;
+get_total_size(t_amount n) {
+  return (n.small * SMALL_USABLE + (n.small * SIZEOF_BLOCK)) +
+         (n.tiny * TINY_USABLE + (n.tiny * SIZEOF_BLOCK)) + SIZEOF_HEAP;
 }
 
 #endif // !ALLOC
