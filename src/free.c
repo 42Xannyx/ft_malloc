@@ -84,7 +84,7 @@ void ft_free(void *ptr) {
   printf("----- FT_FREE ------\n");
 
   if (heap) {
-    print_heap(heap, true);
+    print_heap(heap, false);
   }
 #endif
 

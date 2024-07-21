@@ -40,6 +40,7 @@ debug: all
 
 re: fclean all
 
+test: CFLAGS += -g3 -DTEST=1
 test: $(LIBFT_MALLOC)
 	make -C ./tests/
 	./run.sh ./tests/alloc_tester

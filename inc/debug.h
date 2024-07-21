@@ -23,7 +23,17 @@
 #define DEBUG_PRINT_SIMPLE(msg) ((void)0)
 #endif
 
-#ifdef DEBUG
+#ifdef TEST
+#define TEST_LOG(fmt, ...)                                                     \
+  fprintf(stderr,                                                              \
+          ANSI_COLOR_ORANGE "(TEST) " ANSI_COLOR_RESET "%s:%d:%s(): " fmt      \
+                            "\n",                                              \
+          __FILE__, __LINE__, __func__, ##__VA_ARGS__)
+#else
+#define TEST_LOG(fmt, ...) ((void)0)
+#endif
+
+#if defined(DEBUG) || defined(TEST)
 void print_sizes(void);
 void print_block(t_block *block);
 void print_heap(t_heap *heap, bool show_blocks);

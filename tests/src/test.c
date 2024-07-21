@@ -1,3 +1,6 @@
+#include "alloc.h"
+#include <malloc/_platform.h>
+#include <stdio.h>
 #ifdef __APPLE__
 #include <malloc/malloc.h>
 #endif
@@ -11,6 +14,22 @@
 
 #include <assert.h>
 #include <string.h>
+
+size_t size_heap() {
+  t_heap *tmp = g_heap;
+
+  if (!tmp) {
+    return 0;
+  }
+
+  size_t len = 0;
+  while (tmp) {
+    len++;
+    tmp = tmp->prev;
+  }
+
+  return len;
+}
 
 void stress_test(void) {
   for (int i = 0; i < 128; i++) {
@@ -27,13 +46,6 @@ void fill_string(char *ptr, int64_t n) {
 }
 
 int32_t main(void) {
-  assert(ft_malloc(0) == NULL);
-
-  /*char *ptr = ft_malloc(sizeof(char) * 10);*/
-  /*fill_string(ptr, 95); // 96 should abort*/
-  /*ft_free(ptr);*/
-  /**/
-  /*ptr = NULL;*/
 
   /* Test 1
    * Should return a ptr with a total of 172 blocks.
@@ -60,44 +72,71 @@ int32_t main(void) {
   /* END TEST 1 */
 
   /* Test 2
-   * Same as last run, but shows that the last heap is gone, because of ft_free
+   * Same as last run, but shows that the last heap is gone, because of ft_free.
+   * Check the address of the two heaps to make sure it is different
    */
   char *test_2 = ft_malloc(sizeof(char) * 32896);
   fill_string(test_2, 10);
 
 #ifdef DEBUG
-  print_block((t_block *)test_1);
+  print_block((t_block *)test_2);
 #endif
 
   ft_free(test_2);
-  test_1 = NULL;
+  test_2 = NULL;
 
   /* END TEST 2 */
 
-  /*char *anot_ptr1 = ft_malloc(sizeof(char) * 10);*/
-  /*fill_string(anot_ptr1, 10);*/
-  /*ft_free(anot_ptr1);*/
-  /**/
-  /*char *anot_ptr2 = ft_malloc(sizeof(char) * 10);*/
-  /*(void)anot_ptr2;*/
+  /* Test 3
+   * Create a block which is exactly one TINY block
+   */
+  char *test_3 = ft_malloc(sizeof(char) * 64);
+  fill_string(test_3, 10);
 
-  /*stress_test();*/
+#ifdef DEBUG
+  print_block((t_block *)test_3);
+#endif
 
-  /*ptr = ft_malloc(sizeof(char) * 10);*/
+  ft_free(test_3);
+  test_3 = NULL;
 
-  /*char *anot = ft_malloc(sizeof(char) * 18723812738);*/
+  /* END TEST 3 */
 
-  /*(void)anot;*/
+  /* Test 4
+   * Create a TINY blocks which has 64 bytes of free space
+   */
+  char *test_4 = ft_malloc(sizeof(char) * 1);
+  fill_string(test_4, 1);
 
-  /*stress_test();*/
+#ifdef DEBUG
+  print_block((t_block *)test_4);
+#endif
 
-  /*fill_string(another_ptr, 500);*/
+  ft_free(test_4);
+  test_4 = NULL;
 
-  /*printf("Malloc: %s\n", ptr);*/
-  /*printf("strlen: %ld\n", strlen(ptr));*/
+  /* END TEST 4 */
 
-  /*printf("Malloc: %s\n", another_ptr);*/
-  /*printf("strlen: %ld\n", strlen(another_ptr));*/
+  /* Test 5
+   * A size of 0, which should immediatly return NULL
+   */
+
+  assert(ft_malloc(0) == NULL);
+
+  /* END TEST 5 */
+
+  /* Test 6
+   */
+  char *test_6_1 = ft_malloc(sizeof(char) * 32896);
+  char *test_6_2 = ft_malloc(sizeof(char) * 32896);
+
+  assert(size_heap() == 2);
+
+  ft_free(test_6_1);
+  ft_free(test_6_2);
+  test_2 = NULL;
+
+  /* END TEST 6 */
 
   return 0;
 }

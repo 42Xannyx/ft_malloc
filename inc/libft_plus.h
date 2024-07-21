@@ -26,7 +26,8 @@ extern t_heap *g_heap;
 
 __attribute__((warn_unused_result)) t_block *extend_heap(t_heap **, t_amount,
                                                          size_t);
-__attribute__((warn_unused_result)) t_block *extend_blocks(t_heap **, size_t);
+__attribute__((warn_unused_result)) t_block *extend_blocks(t_heap **, t_amount,
+                                                           size_t);
 
 size_t block_list_len(void *lst);
 size_t block_list_len_by_id(void *lst);

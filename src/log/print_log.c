@@ -6,10 +6,9 @@
 
 #include "alloc.h"
 
-#define STDOUT_FILENO 1
 #define BUFFER_SIZE 256
 
-#ifdef DEBUG
+#if defined(DEBUG) || defined(TEST)
 static void write_str(const char *str) {
   write(STDOUT_FILENO, str, strlen(str));
 }

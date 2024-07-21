@@ -45,15 +45,15 @@ static t_block *allocate_memory(t_heap **heap, size_t aligned_size) {
 
   // Add new blocks to the heap
   DEBUG_PRINT_SIMPLE("Add blocks");
-  return extend_blocks(&tmp_heap, aligned_size);
+  t_block *blocks = extend_blocks(&tmp_heap, amount_blocks, aligned_size);
+  *heap = tmp_heap;
+  return blocks;
 }
 
 void *ft_malloc(size_t size) {
   if (size == 0) {
     return NULL;
   }
-
-  print_sizes();
 
   pthread_mutex_lock(&g_mutex);
 
