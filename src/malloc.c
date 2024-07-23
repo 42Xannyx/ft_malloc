@@ -16,16 +16,16 @@ bool create_large_heap(const size_t n) {
 
 static t_block *allocate_memory(t_heap **heap, size_t aligned_size) {
   t_heap *tmp_heap = *heap;
-  const t_amount amount_blocks = count_blocks(aligned_size);
+  t_amount amount_blocks = count_blocks(aligned_size);
   const size_t block_size = get_total_size(amount_blocks);
-  const bool is_large = create_large_heap(aligned_size);
+  amount_blocks.is_large = create_large_heap(aligned_size);
 
   while (tmp_heap && tmp_heap->next) {
     tmp_heap = tmp_heap->next;
   }
 
   // Heap is empty or is bigger than the acceptable heap size
-  if (!g_heap || is_large == true) {
+  if (!g_heap || amount_blocks.is_large == true) {
     DEBUG_PRINT_SIMPLE("Extending heap by being empty or a LARGE allocation");
     return extend_heap(&g_heap, amount_blocks, aligned_size);
   }

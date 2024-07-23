@@ -78,6 +78,7 @@ typedef struct heap {
 typedef struct s_amount {
   size_t tiny;
   size_t small;
+  bool is_large;
 } t_amount;
 
 // ****** Functions ****** //
@@ -138,7 +139,7 @@ determine_block_size(size_t n) {
 
 __attribute__((warn_unused_result)) static inline t_amount
 count_blocks(size_t n) {
-  t_amount count = {0, 0};
+  t_amount count = {0, 0, 0};
 
   count.small = n / SMALL_USABLE;
   size_t remaining = n % SMALL_USABLE;
@@ -156,8 +157,16 @@ count_blocks(size_t n) {
 
 __attribute__((warn_unused_result)) static inline size_t
 get_total_size(t_amount n) {
-  return (n.small * SMALL_USABLE + (n.small * SIZEOF_BLOCK)) +
-         (n.tiny * TINY_USABLE + (n.tiny * SIZEOF_BLOCK)) + SIZEOF_HEAP;
+  if (n.is_large == true) {
+    return (n.small * SMALL_USABLE + (n.small * SIZEOF_BLOCK)) +
+           (n.tiny * TINY_USABLE + (n.tiny * SIZEOF_BLOCK)) + SIZEOF_HEAP;
+  }
+
+  if (n.small == 0) {
+    return TINY_HEAP_ALLOCATION_SIZE;
+  }
+
+  return SMALL_HEAP_ALLOCATION_SIZE;
 }
 
 #endif // !ALLOC

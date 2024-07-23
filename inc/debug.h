@@ -11,11 +11,11 @@
 #define ANSI_COLOR_RESET "\x1b[0m"
 
 #define DEBUG_PRINT(fmt, ...)                                                  \
-  fprintf(stderr,                                                              \
+  fprintf(stdout,                                                              \
           ANSI_COLOR_ORANGE "(LOG) " ANSI_COLOR_RESET "%s:%d:%s(): " fmt,      \
           __FILE__, __LINE__, __func__, __VA_ARGS__)
 #define DEBUG_PRINT_SIMPLE(msg)                                                \
-  fprintf(stderr,                                                              \
+  fprintf(stdout,                                                              \
           ANSI_COLOR_ORANGE "(LOG) " ANSI_COLOR_RESET "%s:%d:%s(): %s\n",      \
           __FILE__, __LINE__, __func__, msg)
 #else
@@ -25,7 +25,7 @@
 
 #ifdef TEST
 #define TEST_LOG(fmt, ...)                                                     \
-  fprintf(stderr,                                                              \
+  fprintf(stdout,                                                              \
           ANSI_COLOR_ORANGE "(TEST) " ANSI_COLOR_RESET "%s:%d:%s(): " fmt      \
                             "\n",                                              \
           __FILE__, __LINE__, __func__, ##__VA_ARGS__)
