@@ -277,6 +277,39 @@ int main(void) {
 #endif
   g_heap = NULL;
 
+  // Test 9: Adding two new heaps, and then freeing the last one
+  char *ptr = ft_malloc(LARGE_ALLOC);
+#if DEBUG
+  printf("Test 9: Adding two new heaps, and then freeing the last one\n");
+  printf("--- Test 9 ---\n%s\n", "First alloc a LARGE heap");
+  fflush(stdout);
+#endif
+
+  output = capture_stdout(test_small_allocation, true);
+  assert(contains_substring(output, "Block Count\033[0m: 1"));
+  assert(contains_substring(output, "Previous Heap\033[0m: 0x"));
+  assert(extract_mmap_size(output) == (size_t)SMALL_HEAP_ALLOCATION_SIZE);
+
+#if DEBUG
+  printf("\n%s\n", output);
+  fflush(stdout);
+#endif
+
+  // Remove the first heap
+  ft_free(ptr);
+
+  // The second heap should be the fire heap and still accept new blocks
+  output = capture_stdout(test_single_byte_allocation, false);
+  assert(contains_substring(output, "Previous Heap\033[0m: (nil)"));
+  assert(contains_substring(output, "Add blocks"));
+  /*assert(contains_substring(output, "Block Count\033[0m: 3"));*/
+
+#if DEBUG
+  printf("\n%s\n\n------- END TEST 9 --------\n", output);
+  fflush(stdout);
+#endif
+  g_heap = NULL;
+
   printf("All tests completed successfully.\n");
   return 0;
 }
