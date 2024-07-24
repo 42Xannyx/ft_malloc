@@ -64,13 +64,14 @@ typedef struct block {
  * number of blocks in the heap.
  */
 typedef struct heap {
-  size_t total_size;   /**< Total size of the heap. */
-  int64_t free_size;   /**< Size of the free memory in the heap. */
-  size_t block_count;  /**< Number of blocks in the heap. */
-  t_block *last_block; /**< Pointer to the last block in the heap. */
-  t_block *blocks;     /**< Pointer to the first block in the heap. */
-  struct heap *next;   /**< Pointer to the next heap. */
-  struct heap *prev;   /**< Pointer to the previous heap. */
+  size_t total_size;     /**< Total size of the heap. */
+  int64_t free_size;     /**< Size of the free memory in the heap. */
+  size_t block_count;    /**< Number of blocks in the heap. */
+  t_block *last_block;   /**< Pointer to the last block in the heap. */
+  t_block *unused_block; /**< Pointer to an unused_block block in the heap. */
+  t_block *blocks;       /**< Pointer to the first block in the heap. */
+  struct heap *next;     /**< Pointer to the next heap. */
+  struct heap *prev;     /**< Pointer to the previous heap. */
 } t_heap;
 
 // Instead of passing seperate integers. We use a struct to count the amount of
@@ -167,6 +168,12 @@ get_total_size(t_amount n) {
   }
 
   return SMALL_HEAP_ALLOCATION_SIZE;
+}
+
+__attribute__((warn_unused_result)) static inline size_t
+get_total_alloc_size(t_amount n) {
+  return (n.small * SMALL_USABLE + (n.small * SIZEOF_BLOCK)) +
+         (n.tiny * TINY_USABLE + (n.tiny * SIZEOF_BLOCK)) + SIZEOF_HEAP;
 }
 
 #endif // !ALLOC

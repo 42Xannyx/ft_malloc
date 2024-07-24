@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <sys/mman.h>
-#include <time.h>
 
 #include "alloc.h"
 #include "debug.h"
@@ -26,7 +24,7 @@ t_block *extend_blocks(t_heap **heap, t_amount amount_blocks,
   (*heap)->last_block = tmp_block;
 
 #ifdef DEBUG
-  print_heap(*heap, true);
+  print_heap(*heap, false);
 #endif
 
   return block;

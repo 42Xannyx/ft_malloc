@@ -7,6 +7,8 @@ void check_block_integrity(t_block *block);
 
 bool blocks_inuse(t_heap *heap);
 
-size_t amount_of_unused_blocks(t_heap *heap);
+t_amount amount_of_unused_space(t_heap *heap);
+
+bool find_enough_unused_space(t_heap *heap, t_amount amount);
 
 #endif // !SHARED

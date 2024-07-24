@@ -30,7 +30,7 @@ void fill_string(char *ptr, int64_t n) {
 }
 
 // Function to capture stdout
-char *capture_stdout(void (*func)(void)) {
+char *capture_stdout(void (*func)(bool), bool free) {
   // Redirect stdout to a pipe
   int pipe_fd[2];
   if (pipe(pipe_fd) != 0) {
@@ -42,7 +42,7 @@ char *capture_stdout(void (*func)(void)) {
   close(pipe_fd[1]);
 
   // Run the function
-  func();
+  func(free);
 
   // Restore stdout
   fflush(stdout);
@@ -77,28 +77,41 @@ size_t extract_mmap_size(const char *output) {
 }
 
 // Test functions (modified to return void for use with capture_stdout)
-void test_large_allocation(void) {
+void test_large_allocation(bool free) {
   char *test = ft_malloc(sizeof(char) * LARGE_ALLOC);
 
   assert(test != NULL);
   fill_string(test, 10);
-  ft_free(test);
-  g_heap = NULL;
+  if (free == true) {
+    ft_free(test);
+    g_heap = NULL;
+  }
 }
 
-void test_tiny_allocation(void) {
+void test_tiny_allocation(bool free) {
   char *test = ft_malloc(sizeof(char) * 64);
-  if (test) {
-    fill_string(test, 10);
+  assert(test != NULL);
+  fill_string(test, 10);
+
+  if (free) {
     ft_free(test);
   }
 }
 
-void test_single_byte_allocation(void) {
-  printf("Test 4: Single byte allocation\n");
+void test_single_byte_allocation(bool free) {
   char *test = ft_malloc(sizeof(char));
-  if (test) {
-    fill_string(test, 1);
+  assert(test != NULL);
+  fill_string(test, 1);
+  if (free == true) {
+    ft_free(test);
+  }
+}
+
+void test_small_allocation(bool free) {
+  char *test = ft_malloc(sizeof(char) * 192);
+  assert(test != NULL);
+  fill_string(test, 1);
+  if (free == true) {
     ft_free(test);
   }
 }
@@ -110,20 +123,21 @@ void test_zero_allocation(void) {
 }
 
 void test_multiple_allocations(void) {
-  printf("Test 6: Multiple allocations\n");
-  char *test1 = ft_malloc(sizeof(char) * LARGE_ALLOC);
-  char *test2 = ft_malloc(sizeof(char) * LARGE_ALLOC);
-  if (test1 && test2) {
-    ft_free(test1);
-    ft_free(test2);
-  }
+  char *test1 = ft_malloc(sizeof(char) * 64);
+  char *test2 = ft_malloc(sizeof(char) * 64);
+
+  assert(test1 != NULL);
+  assert(test2 != NULL);
+
+  ft_free(test1);
+  ft_free(test2);
 }
 
 int main(void) {
   char *output;
 
   // Test 1: Large allocation
-  output = capture_stdout(test_large_allocation);
+  output = capture_stdout(test_large_allocation, true);
   assert(contains_substring(output, "Calling mmap with total_size 43968"));
   assert(contains_substring(output, "Call munmap()"));
   assert(contains_substring(output, "LARGE allocation"));
@@ -135,22 +149,22 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  // Test 2: Another Large allocation
-  output = capture_stdout(test_large_allocation);
+  /*  // Test 2: Another Large allocation*/
+  output = capture_stdout(test_large_allocation, true);
   assert(contains_substring(output, "Calling mmap with total_size 43968"));
   assert(contains_substring(output, "Call munmap()"));
   assert(contains_substring(output, "LARGE allocation"));
   assert(contains_substring(output, "Block Count\033[0m: 172"));
   assert(extract_mmap_size(output) == 43968);
-  assert(contains_substring(output, "Previous Heap\033[0m: 0x0"));
+  assert(contains_substring(output, "Previous Heap\033[0m: (nil)"));
 #if DEBUG
   printf("Test 2: Another Large allocation\n");
   printf("--- Test 2 ---\n%s\n------- END TEST 2 --------\n", output);
   fflush(stdout);
 #endif
 
-  // Test 3: Tiny allocation
-  output = capture_stdout(test_tiny_allocation);
+  /*  // Test 3: Tiny allocation*/
+  output = capture_stdout(test_tiny_allocation, true);
   assert(contains_substring(output, "Calling mmap"));
   assert(contains_substring(output, "Call munmap()"));
   assert(contains_substring(output, "Block Count\033[0m: 1"));
@@ -161,32 +175,107 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  // Test 4: Single byte allocation
-  output = capture_stdout(test_single_byte_allocation);
+  /*  // Test 4: Single byte allocation*/
+  output = capture_stdout(test_single_byte_allocation, true);
   assert(contains_substring(output, "Calling mmap"));
   assert(contains_substring(output, "Call munmap()"));
-  /*assert(extract_mmap_size(output) == 192);*/
+  assert(extract_mmap_size(output) == (size_t)TINY_HEAP_ALLOCATION_SIZE);
 
-  /*#if DEBUG*/
-  /*  printf("--- Test 4 Output ---\n%s\n----------------------\n", output);*/
-  /*#endif*/
-  /**/
-  /*  // Test 5: Zero allocation*/
-  /*  assert(ft_malloc(0) == NULL);*/
-  /*#if DEBUG*/
-  /*  printf("--- Test 5 Output ---\n%s\n----------------------\n", output);*/
-  /*#endif*/
-  /**/
-  /*  // Test 6: Multiple allocations*/
-  /*  output = capture_stdout(test_multiple_allocations);*/
-  /*  assert(contains_substring(output, "Calling mmap"));*/
-  /*  assert(contains_substring(output, "Call munmap()"));*/
-  /*  // Check for two mmap calls*/
-  /*  char *second_mmap = strstr(output, "Calling mmap") + 1;*/
-  /*  assert(second_mmap && strstr(second_mmap, "Calling mmap"));*/
-  /*#if DEBUG*/
-  /*  printf("--- Test 6 Output ---\n%s\n----------------------\n", output);*/
-  /*#endif*/
+#if DEBUG
+  printf("Test 4: Single byte allocation\n");
+  printf("--- Test 4 ---\n%s\n------- END TEST 4 --------\n", output);
+  fflush(stdout);
+#endif
+
+  // Test 5: Zero allocation*/
+  assert(ft_malloc(0) == NULL);
+#if DEBUG
+  printf("Test 5: Zero allocation\n");
+  fflush(stdout);
+#endif
+  g_heap = NULL;
+
+  // Test 6: Multiple allocations
+  output = capture_stdout(test_single_byte_allocation, false);
+  assert(contains_substring(output, "LARGE allocation"));
+  assert(extract_mmap_size(output) == (size_t)TINY_HEAP_ALLOCATION_SIZE);
+  assert(contains_substring(output, "Block Count\033[0m: 1"));
+#if DEBUG
+  printf("Test 6: Multiple allocations\n");
+  printf("--- Test 6 ---\n%s\n", output);
+  fflush(stdout);
+#endif
+
+  output = capture_stdout(test_single_byte_allocation, false);
+  assert(contains_substring(output, "Block Count\033[0m: 2"));
+  assert(contains_substring(output, "Add blocks"));
+
+#if DEBUG
+  printf("\n%s\n\n------- END TEST 6 --------\n", output);
+  fflush(stdout);
+#endif
+  g_heap = NULL;
+
+  // Test 7: Multiple allocations and reusing blocks
+  output = capture_stdout(test_single_byte_allocation, false);
+  assert(contains_substring(output, "LARGE allocation"));
+  assert(extract_mmap_size(output) == (size_t)TINY_HEAP_ALLOCATION_SIZE);
+  assert(contains_substring(output, "Block Count\033[0m: 1"));
+#if DEBUG
+  printf("Test 7: Multiple allocations and reusing blocks\n");
+  printf("--- Test 7 ---\n%s\n", output);
+  fflush(stdout);
+#endif
+
+  output = capture_stdout(test_single_byte_allocation, true);
+  assert(contains_substring(output, "Block Count\033[0m: 2"));
+  assert(contains_substring(output, "Add blocks"));
+
+#if DEBUG
+  printf("Test 7: Multiple allocations and reusing blocks\n");
+  printf("\n%s\n", output);
+  fflush(stdout);
+#endif
+
+  output = capture_stdout(test_single_byte_allocation, false);
+  assert(contains_substring(output, "Block Count\033[0m: 2"));
+  assert(contains_substring(output, "Reuse blocks"));
+
+#if DEBUG
+  printf("\n%s\n\n------- END TEST 7 --------\n", output);
+  fflush(stdout);
+#endif
+  g_heap = NULL;
+
+  // Test 8: Multiple allocations and adding a block
+  output = capture_stdout(test_small_allocation, false);
+  assert(contains_substring(output, "LARGE allocation"));
+  assert(extract_mmap_size(output) == (size_t)SMALL_HEAP_ALLOCATION_SIZE);
+  assert(contains_substring(output, "Block Count\033[0m: 1"));
+#if DEBUG
+  printf("Test 8: Multiple allocations and reusing blocks\n");
+  printf("--- Test 8 ---\n%s\n", output);
+  fflush(stdout);
+#endif
+
+  output = capture_stdout(test_small_allocation, true);
+  assert(contains_substring(output, "Block Count\033[0m: 2"));
+  assert(contains_substring(output, "Add blocks"));
+
+#if DEBUG
+  printf("\n%s\n", output);
+  fflush(stdout);
+#endif
+
+  output = capture_stdout(test_single_byte_allocation, false);
+  assert(contains_substring(output, "Block Count\033[0m: 3"));
+  assert(contains_substring(output, "Add blocks"));
+
+#if DEBUG
+  printf("\n%s\n\n------- END TEST 8 --------\n", output);
+  fflush(stdout);
+#endif
+  g_heap = NULL;
 
   printf("All tests completed successfully.\n");
   return 0;

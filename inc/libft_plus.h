@@ -1,11 +1,10 @@
 #ifndef LIBFT_PLUS_H
 #define LIBFT_PLUS_H
 
+#include "alloc.h"
 #include <pthread.h>
 #include <stdint.h>
 #include <unistd.h>
-
-#include "alloc.h"
 
 //******** Allocator ********//
 

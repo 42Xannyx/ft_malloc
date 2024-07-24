@@ -1,3 +1,4 @@
+#include "alloc.h"
 #include "libft_plus.h"
 
 #include <stdio.h>
@@ -28,16 +29,54 @@ bool blocks_inuse(t_heap *heap) {
   return false;
 }
 
-size_t amount_of_unused_blocks(t_heap *heap) {
-  size_t len = 0;
+bool find_enough_unused_space(t_heap *heap, t_amount amount) {
+  t_amount space = {0};
   t_block *block = heap->blocks;
 
   while (block) {
     if (block->inuse == false) {
-      len = len + 1;
+      if (block->size == (size_t)TINY_BLOCK_SIZE - SIZEOF_BLOCK) {
+        space.tiny = space.tiny + 1;
+      } else {
+        space.small = space.small + 1;
+      }
+
+      if (((block->next && block->next->inuse == true) || !block->next) &&
+          space.small >= amount.small && space.tiny >= amount.tiny) {
+        while (block->prev && block->prev->inuse == false) {
+          block = block->prev;
+        }
+        heap->unused_block = block;
+        return true;
+      } else {
+        space.tiny = 0;
+        space.small = 0;
+      }
     }
     block = block->next;
   }
 
-  return len;
+  return false;
+}
+
+t_amount amount_of_unused_space(t_heap *heap) {
+  t_amount space = {0};
+  t_block *block = heap->blocks;
+
+  while (block) {
+    if (block->inuse == false) {
+      heap->unused_block = block;
+      if (block->size == (size_t)TINY_BLOCK_SIZE - SIZEOF_BLOCK) {
+        space.tiny = space.tiny + 1;
+      } else {
+        space.small = space.small + 1;
+      }
+      if (block->next && block->inuse == true) {
+        return space;
+      }
+    }
+    block = block->next;
+  }
+
+  return space;
 }

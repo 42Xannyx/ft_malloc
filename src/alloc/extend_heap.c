@@ -61,12 +61,7 @@ t_block *extend_heap(t_heap **heap, t_amount amount_blocks, const size_t size) {
   *heap = tmp_heap;
 
 #ifdef DEBUG
-  if ((*heap)->next) {
-    print_heap(*heap, false);
-    print_heap((*heap)->next, false);
-  } else {
-    print_heap(*heap, false);
-  }
+  print_heap(*heap, false);
 #endif
 
   *(size_t *)((char *)(block + 1) + size - sizeof(size_t)) = BLOCK_MAGIC;
