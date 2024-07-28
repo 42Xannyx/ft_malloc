@@ -21,7 +21,7 @@ static void write_size_t(size_t value) {
 
 static void write_int(int64_t value) {
   char buffer[BUFFER_SIZE];
-  int len = snprintf(buffer, BUFFER_SIZE, "%ld", value);
+  int len = snprintf(buffer, BUFFER_SIZE, "%lld", value);
   write(STDOUT_FILENO, buffer, len);
 }
 
@@ -55,19 +55,19 @@ void print_block_count(t_amount block_count) {
   printf("\n--- Block Allocation Summary ---\n");
 
   printf("\033[1;34mTINY Blocks\033[0m:\n");
-  printf("  Size: %ld bytes\n", TINY_BLOCK_SIZE);
+  printf("  Size: %d bytes\n", TINY_BLOCK_SIZE);
   printf("  Count: %zu\n", block_count.tiny);
   printf("  Total: %zu bytes\n", block_count.tiny * TINY_BLOCK_SIZE);
 
   printf("\033[1;32mSMALL Blocks\033[0m:\n");
-  printf("  Size: %ld bytes\n", SMALL_BLOCK_SIZE);
+  printf("  Size: %d bytes\n", SMALL_BLOCK_SIZE);
   printf("  Count: %zu\n", block_count.small);
   printf("  Total: %zu bytes\n", block_count.small * SMALL_BLOCK_SIZE);
 
   printf("\nAllocation Sizes:\n");
-  printf("  \033[1;34mTINY_HEAP_ALLOCATION_SIZE\033[0m: %ld bytes\n",
+  printf("  \033[1;34mTINY_HEAP_ALLOCATION_SIZE\033[0m: %d bytes\n",
          TINY_HEAP_ALLOCATION_SIZE);
-  printf("  \033[1;32mSMALL_HEAP_ALLOCATION_SIZE\033[0m: %ld bytes\n",
+  printf("  \033[1;32mSMALL_HEAP_ALLOCATION_SIZE\033[0m: %d bytes\n",
          SMALL_HEAP_ALLOCATION_SIZE);
 
   printf("\nTotal Blocks: %zu\n", block_count.tiny + block_count.small);
