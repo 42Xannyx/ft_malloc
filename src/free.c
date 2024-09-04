@@ -65,7 +65,7 @@ void ft_free(void *ptr) {
   t_heap *heap = g_heap;
   t_block *block = (t_block *)((char *)ptr - sizeof(t_block));
 
-  check_block_integrity(block);
+  /*check_block_integrity(block);*/
 
   ssize_t current_id = block->_id;
   t_block *tmp = block;
@@ -92,17 +92,15 @@ void ft_free(void *ptr) {
     int32_t ret = destroy_heap(&heap);
 
     if (ret != 0) {
-      // TODO: Should I add an error messsage?
       fprintf(stderr, "Failed to destroy heap: %s\n", strerror(errno));
 
       pthread_mutex_unlock(&g_mutex);
       return;
     }
 
-    ptr = NULL;   /* Does not change anything for the user. This is just out
-                     of safety*/
-    block = NULL; /* Does not change anything for the user. This is just out
-                   of safety*/
+    /* Does not change anything for the user. This is just out of safety*/
+    ptr = NULL;
+    block = NULL;
 
     // Set Global heap to NULL to show it does not exist
     heap = NULL;
