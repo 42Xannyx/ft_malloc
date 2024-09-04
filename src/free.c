@@ -18,13 +18,45 @@ void report_corruption(void) {
 
 int32_t destroy_heap(t_heap **heap) {
 
-#ifdef DEBUG
-  printf("Call munmap()\n");
-#endif
+  DEBUG_PRINT_SIMPLE("Call munmap()\n");
 
   int32_t ret = munmap(*heap, (*heap)->total_size);
 
   return ret;
+}
+
+t_heap *find_heap_for_block(t_block *block) {
+  t_heap *current_heap = g_heap;
+
+  while (current_heap) {
+    uintptr_t heap_start = (uintptr_t)current_heap;
+    uintptr_t heap_end = heap_start + current_heap->total_size;
+
+    DEBUG_PRINT("Heap start: %zu\n", heap_start);
+    DEBUG_PRINT("Heap start: %zu\n", heap_end);
+    DEBUG_PRINT("Block: %zu\n", (uintptr_t)block);
+
+    if ((uintptr_t)block >= heap_start && (uintptr_t)block < heap_end) {
+      return current_heap;
+    }
+    current_heap = current_heap->prev;
+  }
+  return NULL;
+}
+
+void realign_heap(t_heap *to_remove) {
+  if (!to_remove->next && !to_remove->prev) {
+    g_heap = NULL;
+    return;
+  }
+
+  if (to_remove->prev) {
+    to_remove->prev->next = to_remove->next;
+  }
+
+  if (to_remove->next) {
+    to_remove->next->prev = to_remove->prev;
+  }
 }
 
 /**
@@ -62,10 +94,16 @@ void ft_free(void *ptr) {
     return;
   }
 
-  t_heap *heap = g_heap;
   t_block *block = (t_block *)((char *)ptr - sizeof(t_block));
+  t_heap *heap = find_heap_for_block(block);
 
-  /*check_block_integrity(block);*/
+  if (!heap) {
+    write(STDERR_FILENO, "block not found in any heap\n", 28);
+    pthread_mutex_unlock(&g_mutex);
+    return;
+  }
+
+  check_buffer_overflow(block);
 
   ssize_t current_id = block->_id;
   t_block *tmp = block;
@@ -83,12 +121,11 @@ void ft_free(void *ptr) {
 #ifdef DEBUG
   printf("----- FT_FREE ------\n");
 
-  if (heap) {
-    print_heap(heap, false);
-  }
+  print_heap(heap, false);
 #endif
 
   if (block_len == heap->block_count || blocks_in_use == false) {
+    realign_heap(heap);
     int32_t ret = destroy_heap(&heap);
 
     if (ret != 0) {
@@ -101,10 +138,7 @@ void ft_free(void *ptr) {
     /* Does not change anything for the user. This is just out of safety*/
     ptr = NULL;
     block = NULL;
-
-    // Set Global heap to NULL to show it does not exist
     heap = NULL;
-    g_heap = heap;
 
     pthread_mutex_unlock(&g_mutex);
     return;

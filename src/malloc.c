@@ -69,6 +69,18 @@ void *ft_malloc(size_t size) {
     return NULL;
   }
 
+  block->magic_start = BLOCK_MAGIC;
+  t_block *tmp = block;
+
+  while (tmp && tmp->next) {
+    print_block(tmp);
+    tmp = tmp->next;
+  }
+
+  uint32_t *magic_end = (uint32_t *)((char *)tmp + SIZEOF_BLOCK + tmp->size);
+  *magic_end = BLOCK_MAGIC;
+
+  print_block(tmp);
   pthread_mutex_unlock(&g_mutex);
   return (void *)((char *)block + sizeof(t_block));
 }

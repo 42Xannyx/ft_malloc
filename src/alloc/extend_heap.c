@@ -64,7 +64,5 @@ t_block *extend_heap(t_heap **heap, t_amount amount_blocks, const size_t size) {
   print_heap(*heap, false);
 #endif
 
-  *(size_t *)((char *)(block + 1) + size - sizeof(size_t)) = BLOCK_MAGIC;
-
   return block;
 }

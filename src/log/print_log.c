@@ -92,7 +92,7 @@ void print_block(t_block *block) {
   write_str(" bytes\n");
 
   write_str("  \033[1;36mSize with metadata\033[0m: ");
-  write_size_t(block->size + align_sizeof(sizeof(t_block)));
+  write_size_t(block->size + SIZEOF_BLOCK);
   write_str(" bytes\n");
 
   write_str("  \033[1;36mIn Use\033[0m: ");

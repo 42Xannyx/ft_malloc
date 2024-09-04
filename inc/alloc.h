@@ -47,11 +47,12 @@ typedef intptr_t word_t;
  * whether the block is free.
  */
 typedef struct block {
-  ssize_t _id;        /**< A random id. */
-  size_t size;        /**< Size of the block of memory. */
-  bool inuse;         /**< Flag indicating whether the block is free. */
-  struct block *next; /**< Pointer to the next block in the heap. */
-  struct block *prev; /**< Pointer to the previous block in the heap. */
+  uint32_t magic_start; /**< Magic word at the start of the block */
+  ssize_t _id;          /**< A random id. */
+  size_t size;          /**< Size of the block of memory. */
+  bool inuse;           /**< Flag indicating whether the block is free. */
+  struct block *next;   /**< Pointer to the next block in the heap. */
+  struct block *prev;   /**< Pointer to the previous block in the heap. */
 } t_block;
 
 /**

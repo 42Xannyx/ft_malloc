@@ -3,7 +3,7 @@
 
 #include "alloc.h"
 
-void check_block_integrity(t_block *block);
+void check_buffer_overflow(t_block *block);
 
 bool blocks_inuse(t_heap *heap);
 

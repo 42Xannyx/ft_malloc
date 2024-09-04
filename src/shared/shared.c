@@ -1,4 +1,5 @@
 #include "alloc.h"
+#include "debug.h"
 #include "libft_plus.h"
 
 #include <stdio.h>
@@ -7,13 +8,34 @@
 t_heap *g_heap = NULL;
 pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-void check_block_integrity(t_block *block) {
-  size_t total_size = sizeof(t_block) + block->size;
-  size_t *end_canary = (size_t *)((char *)block + total_size);
-  if (*end_canary != BLOCK_MAGIC) {
-    fprintf(stderr, "Buffer overflow detected in block %p\n", (void *)block);
-    /*abort();*/
+bool check_buffer_overflow(t_block *block) {
+  if (!block)
+    return false;
+
+  if (block->magic_start != BLOCK_MAGIC) {
+    fprintf(stderr, "Buffer underflow detected at block %p!\n", (void *)block);
+    abort();
   }
+
+  /*while (block) {*/
+  /*  if (block->next == NULL) {*/
+  /*    uint32_t *magic_end =*/
+  /*        (uint32_t *)((char *)block + SIZEOF_BLOCK + block->size);*/
+  /*    DEBUG_PRINT("Checking Magic End at %p: %u\n", (void *)magic_end,*/
+  /*                *magic_end);*/
+  /*    if (*magic_end != BLOCK_MAGIC) {*/
+  /**/
+  /*      fprintf(stderr, "Buffer overflow detected at end of block %p!\n",*/
+  /*              (void *)block);*/
+  /*      abort();*/
+  /*    }*/
+  /*    break;*/
+  /*  }*/
+  /**/
+  /*  block = block->next;*/
+  /*}*/
+
+  return false;
 }
 
 bool blocks_inuse(t_heap *heap) {

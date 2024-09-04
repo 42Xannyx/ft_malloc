@@ -1,6 +1,8 @@
 #include "alloc.h"
 #include <stdio.h>
 
+#include "debug.h"
+
 size_t block_list_len(void *lst) {
   if (!lst) {
     return 0;
@@ -27,6 +29,7 @@ size_t block_list_len_by_id(void *lst) {
   ssize_t current_id = block->_id;
 
   while (block && current_id == block->_id) {
+    print_block(block);
     block = block->next;
     len++;
   }
