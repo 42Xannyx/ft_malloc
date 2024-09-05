@@ -56,7 +56,7 @@ t_block *extend_heap(t_heap **heap, t_amount amount_blocks, const size_t size) {
   }
 
 #ifdef DEBUG
-  print_heap(tmp_heap, true);
+  print_heap(tmp_heap, false);
 #endif
 
   return block;

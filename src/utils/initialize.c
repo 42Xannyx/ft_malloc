@@ -28,7 +28,7 @@ t_block *add_block(t_heap **heap, size_t size) {
   }
 
   while (remaining > 0) {
-    t_block *block = (t_block *)current_position + SIZEOF_BLOCK;
+    t_block *block = (t_block *)current_position;
     size_t total_block_size = determine_block_size(remaining);
     size_t usable_size = total_block_size - SIZEOF_BLOCK;
 

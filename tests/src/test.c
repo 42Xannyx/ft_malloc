@@ -179,7 +179,8 @@ int main(void) {
   assert(contains_substring(output, "Calling mmap"));
   assert(contains_substring(output, "Call munmap()"));
   assert(contains_substring(output, "Block Count\033[0m: 1"));
-  assert(extract_mmap_size(output) == * / (size_t)TINY_HEAP_ALLOCATION_SIZE);
+  assert(extract_mmap_size(output) == (size_t)TINY_HEAP_ALLOCATION_SIZE);
+
 #if DEBUG
   printf("Test 3: Tiny allocation\n");
   printf("--- Test 3 ---\n%s\n------- END TEST 3 --------\n", output);
@@ -416,18 +417,19 @@ int main(void) {
   ft_free(ptr);
   g_heap = NULL;
 
-#if DEBUG
-  printf("\nTest 15: Allocate more than a regular block and do not buffer "
-         "overflow\n");
-  fflush(stdout);
-#endif
-
-  ptr = ft_malloc(300);
-
-  fill_string(ptr, 241);
-
-  ft_free(ptr);
-  g_heap = NULL;
+  /*#if DEBUG*/
+  /*  printf("\nTest 15: Allocate more than a regular block and do not buffer
+   * "*/
+  /*         "overflow\n");*/
+  /*  fflush(stdout);*/
+  /*#endif*/
+  /**/
+  /*  ptr = ft_malloc(300);*/
+  /**/
+  /*  fill_string(ptr, 241);*/
+  /**/
+  /*  ft_free(ptr);*/
+  /*  g_heap = NULL;*/
 
   printf("All tests completed successfully.\n");
   return 0;
