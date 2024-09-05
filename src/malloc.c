@@ -8,11 +8,7 @@
 #include <stdio.h>
 
 bool create_large_heap(const size_t n) {
-  if (n > (size_t)SMALL_HEAP_ALLOCATION_SIZE) {
-    return true;
-  }
-
-  return false;
+  return n > (size_t)SMALL_HEAP_ALLOCATION_SIZE;
 }
 
 static t_block *allocate_memory(t_heap **heap, size_t aligned_size) {
@@ -73,14 +69,12 @@ void *ft_malloc(size_t size) {
   t_block *tmp = block;
 
   while (tmp && tmp->next) {
-    print_block(tmp);
     tmp = tmp->next;
   }
 
   uint32_t *magic_end = (uint32_t *)((char *)tmp + SIZEOF_BLOCK + tmp->size);
   *magic_end = BLOCK_MAGIC;
 
-  print_block(tmp);
   pthread_mutex_unlock(&g_mutex);
   return (void *)((char *)block + sizeof(t_block));
 }
