@@ -97,7 +97,7 @@ align_sizeof(size_t n) {
 
 // ****** Defaults ****** //
 
-#define SIZEOF_BLOCK (align_sizeof(sizeof(t_block)))
+#define SIZEOF_BLOCK (sizeof(t_block))
 #define SIZEOF_HEAP (align_sizeof(sizeof(t_heap)))
 #define TINY_USABLE (TINY_BLOCK_SIZE - SIZEOF_BLOCK)
 #define SMALL_USABLE (SMALL_BLOCK_SIZE - SIZEOF_BLOCK)
@@ -130,24 +130,6 @@ determine_block_size(size_t n) {
   return SMALL_BLOCK_SIZE;
 }
 
-/*__attribute__((warn_unused_result)) static inline t_amount*/
-/*count_blocks(size_t n) {*/
-/*  t_amount count = {0, 0, 0};*/
-/**/
-/*  count.small = n / SMALL_USABLE;*/
-/*  size_t remaining = n % SMALL_USABLE;*/
-/**/
-/*  if (remaining > 0) {*/
-/*    if (remaining <= TINY_USABLE) {*/
-/*      count.tiny = 1;*/
-/*    } else {*/
-/*      count.small++;*/
-/*    }*/
-/*  }*/
-/**/
-/*  return count;*/
-/*}*/
-
 __attribute__((warn_unused_result)) static inline size_t
 get_total_size(bool is_large, const size_t n) {
   if (is_large == true) {
@@ -160,11 +142,5 @@ get_total_size(bool is_large, const size_t n) {
 
   return SMALL_HEAP_ALLOCATION_SIZE;
 }
-
-/*__attribute__((warn_unused_result)) static inline size_t*/
-/*get_total_alloc_size(t_amount n) {*/
-/*  return (n.small * SMALL_USABLE + (n.small * SIZEOF_BLOCK)) +*/
-/*         (n.tiny * TINY_USABLE + (n.tiny * SIZEOF_BLOCK)) + SIZEOF_HEAP;*/
-/*}*/
 
 #endif // !ALLOC

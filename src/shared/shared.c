@@ -17,23 +17,23 @@ bool check_buffer_overflow(t_block *block) {
     abort();
   }
 
-  /*while (block) {*/
-  /*  if (block->next == NULL) {*/
-  /*    uint32_t *magic_end =*/
-  /*        (uint32_t *)((char *)block + SIZEOF_BLOCK + block->size);*/
-  /*    DEBUG_PRINT("Checking Magic End at %p: %u\n", (void *)magic_end,*/
-  /*                *magic_end);*/
-  /*    if (*magic_end != BLOCK_MAGIC) {*/
-  /**/
-  /*      fprintf(stderr, "Buffer overflow detected at end of block %p!\n",*/
-  /*              (void *)block);*/
-  /*      abort();*/
-  /*    }*/
-  /*    break;*/
-  /*  }*/
-  /**/
-  /*  block = block->next;*/
-  /*}*/
+  while (block) {
+    if (block->next == NULL) {
+      uint32_t *magic_end =
+          (uint32_t *)((char *)block + SIZEOF_BLOCK + block->size);
+      DEBUG_PRINT("Checking Magic End at %p: %u\n", (void *)magic_end,
+                  *magic_end);
+      if (*magic_end != BLOCK_MAGIC) {
+
+        fprintf(stderr, "Buffer overflow detected at end of block %p!\n",
+                (void *)block);
+        abort();
+      }
+      break;
+    }
+
+    block = block->next;
+  }
 
   return false;
 }
