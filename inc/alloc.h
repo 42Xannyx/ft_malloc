@@ -48,7 +48,6 @@ typedef intptr_t word_t;
  */
 typedef struct block {
   uint32_t magic_start; /**< Magic word at the start of the block */
-  ssize_t _id;          /**< A random id. */
   size_t size;          /**< Size of the block of memory. */
   bool inuse;           /**< Flag indicating whether the block is free. */
   struct block *next;   /**< Pointer to the next block in the heap. */
@@ -74,14 +73,6 @@ typedef struct heap {
   struct heap *next;     /**< Pointer to the next heap. */
   struct heap *prev;     /**< Pointer to the previous heap. */
 } t_heap;
-
-// Instead of passing seperate integers. We use a struct to count the amount of
-// blocks per block size
-typedef struct s_amount {
-  size_t tiny;
-  size_t small;
-  bool is_large;
-} t_amount;
 
 // ****** Functions ****** //
 
@@ -139,42 +130,41 @@ determine_block_size(size_t n) {
   return SMALL_BLOCK_SIZE;
 }
 
-__attribute__((warn_unused_result)) static inline t_amount
-count_blocks(size_t n) {
-  t_amount count = {0, 0, 0};
-
-  count.small = n / SMALL_USABLE;
-  size_t remaining = n % SMALL_USABLE;
-
-  if (remaining > 0) {
-    if (remaining <= TINY_USABLE) {
-      count.tiny = 1;
-    } else {
-      count.small++;
-    }
-  }
-
-  return count;
-}
+/*__attribute__((warn_unused_result)) static inline t_amount*/
+/*count_blocks(size_t n) {*/
+/*  t_amount count = {0, 0, 0};*/
+/**/
+/*  count.small = n / SMALL_USABLE;*/
+/*  size_t remaining = n % SMALL_USABLE;*/
+/**/
+/*  if (remaining > 0) {*/
+/*    if (remaining <= TINY_USABLE) {*/
+/*      count.tiny = 1;*/
+/*    } else {*/
+/*      count.small++;*/
+/*    }*/
+/*  }*/
+/**/
+/*  return count;*/
+/*}*/
 
 __attribute__((warn_unused_result)) static inline size_t
-get_total_size(t_amount n) {
-  if (n.is_large == true) {
-    return (n.small * SMALL_USABLE + (n.small * SIZEOF_BLOCK)) +
-           (n.tiny * TINY_USABLE + (n.tiny * SIZEOF_BLOCK)) + SIZEOF_HEAP;
+get_total_size(bool is_large, const size_t n) {
+  if (is_large == true) {
+    return n + SIZEOF_HEAP + SIZEOF_BLOCK;
   }
 
-  if (n.small == 0) {
+  if (n <= TINY_USABLE) {
     return TINY_HEAP_ALLOCATION_SIZE;
   }
 
   return SMALL_HEAP_ALLOCATION_SIZE;
 }
 
-__attribute__((warn_unused_result)) static inline size_t
-get_total_alloc_size(t_amount n) {
-  return (n.small * SMALL_USABLE + (n.small * SIZEOF_BLOCK)) +
-         (n.tiny * TINY_USABLE + (n.tiny * SIZEOF_BLOCK)) + SIZEOF_HEAP;
-}
+/*__attribute__((warn_unused_result)) static inline size_t*/
+/*get_total_alloc_size(t_amount n) {*/
+/*  return (n.small * SMALL_USABLE + (n.small * SIZEOF_BLOCK)) +*/
+/*         (n.tiny * TINY_USABLE + (n.tiny * SIZEOF_BLOCK)) + SIZEOF_HEAP;*/
+/*}*/
 
 #endif // !ALLOC

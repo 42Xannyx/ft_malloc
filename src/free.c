@@ -105,17 +105,15 @@ void ft_free(void *ptr) {
 
   check_buffer_overflow(block);
 
-  ssize_t current_id = block->_id;
   t_block *tmp = block;
-
-  while (tmp && tmp->_id == current_id) {
+  while (tmp) {
     tmp->inuse = false;
     tmp = tmp->next;
   }
 
   block = tmp;
 
-  size_t block_len = block_list_len_by_id(block);
+  /*size_t block_len = block_list_len_by_id(block);*/
   bool blocks_in_use = blocks_inuse(heap);
 
 #ifdef DEBUG
@@ -124,7 +122,7 @@ void ft_free(void *ptr) {
   print_heap(heap, false);
 #endif
 
-  if (block_len == heap->block_count || blocks_in_use == false) {
+  if (1 == heap->block_count || blocks_in_use == false) {
     realign_heap(heap);
     int32_t ret = destroy_heap(&heap);
 

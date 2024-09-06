@@ -23,22 +23,15 @@ extern t_heap *g_heap;
 
 //******** Functions ********//
 
-__attribute__((warn_unused_result)) t_block *extend_heap(t_heap **, t_amount,
-                                                         size_t);
-__attribute__((warn_unused_result)) t_block *extend_blocks(t_heap **, t_amount,
-                                                           size_t);
+__attribute__((warn_unused_result)) t_block *extend_heap(t_heap **, bool,
+                                                         const size_t);
+__attribute__((warn_unused_result)) t_block *extend_blocks(t_heap **,
+                                                           const size_t);
 
 size_t block_list_len(void *lst);
 size_t block_list_len_by_id(void *lst);
 void initialize_heap(t_heap *heap);
 t_block *add_block(t_heap **heap, size_t size);
 t_block *reuse_block(t_heap **heap, size_t size);
-
-//******** Inline Functions ********//
-
-__attribute__((warn_unused_result)) static inline size_t
-get_amount_blocks(t_amount n) {
-  return n.tiny + n.small;
-}
 
 #endif

@@ -7,8 +7,8 @@ void check_buffer_overflow(t_block *block);
 
 bool blocks_inuse(t_heap *heap);
 
-t_amount amount_of_unused_space(t_heap *heap);
+/*size_t amount_of_unused_space(t_heap *heap);*/
 
-bool find_enough_unused_space(t_heap *heap, t_amount amount);
+bool find_enough_unused_space(t_heap *heap, const size_t);
 
 #endif // !SHARED
