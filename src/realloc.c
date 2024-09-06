@@ -38,6 +38,7 @@ void *ft_realloc(void *ptr, size_t size) {
   }
 
   t_block *heap_block = extend_heap(&heap, true, aligned_size);
+  (void)heap_block;
 
   pthread_mutex_unlock(&g_mutex);
   return ptr;
