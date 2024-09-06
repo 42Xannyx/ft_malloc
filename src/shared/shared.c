@@ -66,24 +66,17 @@ bool find_enough_unused_space(t_heap *heap, const size_t size) {
   return false;
 }
 
-/*t_amount amount_of_unused_space(t_heap *heap) {*/
-/*  t_amount space = {0};*/
-/*  t_block *block = heap->blocks;*/
-/**/
-/*  while (block) {*/
-/*    if (block->inuse == false) {*/
-/*      heap->unused_block = block;*/
-/*      if (block->size == (size_t)TINY_BLOCK_SIZE - SIZEOF_BLOCK) {*/
-/*        space.tiny = space.tiny + 1;*/
-/*      } else {*/
-/*        space.small = space.small + 1;*/
-/*      }*/
-/*      if (block->next && block->inuse == true) {*/
-/*        return space;*/
-/*      }*/
-/*    }*/
-/*    block = block->next;*/
-/*  }*/
-/**/
-/*  return space;*/
-/*}*/
+t_heap *find_heap_for_block(t_block *block) {
+  t_heap *current_heap = g_heap;
+
+  while (current_heap) {
+    uintptr_t heap_start = (uintptr_t)current_heap;
+    uintptr_t heap_end = heap_start + current_heap->total_size;
+
+    if ((uintptr_t)block >= heap_start && (uintptr_t)block < heap_end) {
+      return current_heap;
+    }
+    current_heap = current_heap->prev;
+  }
+  return NULL;
+}

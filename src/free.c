@@ -25,25 +25,6 @@ int32_t destroy_heap(t_heap **heap) {
   return ret;
 }
 
-t_heap *find_heap_for_block(t_block *block) {
-  t_heap *current_heap = g_heap;
-
-  while (current_heap) {
-    uintptr_t heap_start = (uintptr_t)current_heap;
-    uintptr_t heap_end = heap_start + current_heap->total_size;
-
-    DEBUG_PRINT("Heap start: %zu\n", heap_start);
-    DEBUG_PRINT("Heap start: %zu\n", heap_end);
-    DEBUG_PRINT("Block: %zu\n", (uintptr_t)block);
-
-    if ((uintptr_t)block >= heap_start && (uintptr_t)block < heap_end) {
-      return current_heap;
-    }
-    current_heap = current_heap->prev;
-  }
-  return NULL;
-}
-
 void realign_heap(t_heap *to_remove) {
   if (!to_remove->next && !to_remove->prev) {
     g_heap = NULL;

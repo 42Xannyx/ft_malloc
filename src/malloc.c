@@ -14,7 +14,6 @@ static bool create_large_heap(const size_t n) {
 static t_block *allocate_memory(t_heap **heap, const size_t aligned_size) {
   t_heap *tmp_heap = *heap;
   bool is_large = create_large_heap(aligned_size);
-
   while (tmp_heap && tmp_heap->next) {
     tmp_heap = tmp_heap->next;
   }
@@ -65,13 +64,9 @@ void *ft_malloc(size_t size) {
   }
 
   block->magic_start = BLOCK_MAGIC;
-  t_block *tmp = block;
 
-  while (tmp && tmp->next) {
-    tmp = tmp->next;
-  }
-
-  uint32_t *magic_end = (uint32_t *)((char *)tmp + SIZEOF_BLOCK + tmp->size);
+  uint32_t *magic_end =
+      (uint32_t *)((char *)block + SIZEOF_BLOCK + block->size);
   *magic_end = BLOCK_MAGIC;
 
   pthread_mutex_unlock(&g_mutex);
