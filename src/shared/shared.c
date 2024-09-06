@@ -55,9 +55,7 @@ bool find_enough_unused_space(t_heap *heap, const size_t size) {
   t_block *block = heap->blocks;
 
   while (block) {
-    DEBUG_PRINT("size: %zu\n", size);
-    DEBUG_PRINT("size: %zu\n", block->size);
-    if (block->inuse == false && block->size >= size - SIZEOF_BLOCK) {
+    if (block->inuse == false && block->size >= size) {
 
       heap->unused_block = block;
       return true;

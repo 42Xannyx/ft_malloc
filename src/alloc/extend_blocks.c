@@ -4,11 +4,9 @@
 
 t_block *extend_blocks(t_heap **heap, const size_t size) {
   // | Metadata + requested allocation |
-  const size_t amount_of_block_size = determine_total_block_size(size);
-
-  (*heap)->free_size = (*heap)->free_size - amount_of_block_size - SIZEOF_BLOCK;
+  (*heap)->free_size = (*heap)->free_size - size - SIZEOF_BLOCK;
   (*heap)->block_count = (*heap)->block_count + 1;
-  t_block *block = add_block(heap, amount_of_block_size);
+  t_block *block = add_block(heap, size);
 
   t_block *tmp_block = (*heap)->last_block;
 
@@ -19,7 +17,7 @@ t_block *extend_blocks(t_heap **heap, const size_t size) {
   (*heap)->last_block = tmp_block;
 
 #ifdef DEBUG
-  print_heap(*heap, false);
+  print_heap(*heap, true);
 #endif
 
   return block;

@@ -17,8 +17,7 @@ static uintptr_t get_current_position(t_heap *heap, t_block *tmp_block) {
   return (uintptr_t)(heap) + sizeof(t_heap); // Skip heap metadata
 }
 
-t_block *add_block(t_heap **heap, size_t size) {
-  size_t usable_size = size - SIZEOF_BLOCK;
+t_block *add_block(t_heap **heap, const size_t size) {
   t_block *tmp_block = (*heap)->last_block;
 
   if (tmp_block) {
@@ -30,12 +29,14 @@ t_block *add_block(t_heap **heap, size_t size) {
   uintptr_t current_position = get_current_position(*heap, tmp_block);
   t_block *block = (t_block *)current_position;
 
-  block->size = usable_size;
+  block->size = size;
   block->inuse = true;
   block->next = NULL;
   block->prev = tmp_block;
 
-  if (!(*heap)->blocks) {
+  if (tmp_block) {
+    tmp_block->next = block;
+  } else {
     (*heap)->blocks = block;
   }
 

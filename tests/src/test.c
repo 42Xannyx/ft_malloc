@@ -249,16 +249,14 @@ int main(void) {
 #endif
 
   output = capture_stdout(test_single_byte_allocation, false);
-  /*assert(contains_substring(output, "Block Count\033[0m: 2"));*/
-  /*assert(contains_substring(output, "Reuse blocks"));*/
+  assert(contains_substring(output, "Block Count\033[0m: 2"));
+  assert(contains_substring(output, "Reuse blocks"));
 
 #if DEBUG
   printf("\n%s\n\n------- END TEST 7 --------\n", output);
   fflush(stdout);
 #endif
   g_heap = NULL;
-
-  exit(1);
 
   // Test 8: Multiple allocations and adding a block
   output = capture_stdout(test_small_allocation, false);
@@ -271,7 +269,7 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  output = capture_stdout(test_small_allocation, true);
+  output = capture_stdout(test_tiny_allocation, true);
   assert(contains_substring(output, "Block Count\033[0m: 2"));
   assert(contains_substring(output, "Add blocks"));
 
@@ -280,7 +278,7 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  output = capture_stdout(test_single_byte_allocation, false);
+  output = capture_stdout(test_small_allocation, false);
   assert(contains_substring(output, "Block Count\033[0m: 3"));
   assert(contains_substring(output, "Add blocks"));
 

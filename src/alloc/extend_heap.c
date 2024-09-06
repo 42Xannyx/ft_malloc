@@ -11,7 +11,6 @@
 
 t_block *extend_heap(t_heap **heap, bool is_large, const size_t size) {
   // | Metadata + requested allocation |
-  const size_t amount_of_block_size = determine_total_block_size(size);
   const size_t total_size = get_total_size(is_large, size);
 
   DEBUG_PRINT("Calling mmap with total_size %zu\n", total_size);
@@ -25,8 +24,7 @@ t_block *extend_heap(t_heap **heap, bool is_large, const size_t size) {
   DEBUG_PRINT("mmap returned %p\n", (void *)tmp_heap);
 
   tmp_heap->total_size = total_size;
-  tmp_heap->free_size =
-      total_size - amount_of_block_size - SIZEOF_HEAP - SIZEOF_BLOCK;
+  tmp_heap->free_size = total_size - size - SIZEOF_HEAP - SIZEOF_BLOCK;
   tmp_heap->block_count++;
 
   t_block *block = NULL;
@@ -35,9 +33,9 @@ t_block *extend_heap(t_heap **heap, bool is_large, const size_t size) {
     tmp_heap->prev = NULL;
     (*heap) = tmp_heap;
 
-    block = add_block(heap, amount_of_block_size);
+    block = add_block(heap, size);
   } else {
-    block = add_block(&tmp_heap, amount_of_block_size);
+    block = add_block(&tmp_heap, size);
 
     tmp_heap->prev = *heap;
     (*heap)->next = tmp_heap;
