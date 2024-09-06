@@ -27,7 +27,7 @@ bool check_buffer_overflow(t_block *block) {
 
         fprintf(stderr, "Buffer overflow detected at end of block %p!\n",
                 (void *)block);
-        /*abort();*/
+        abort();
       }
       break;
     }
@@ -51,29 +51,14 @@ bool blocks_inuse(t_heap *heap) {
   return false;
 }
 
-bool find_enough_unused_space(t_heap *heap, t_amount amount) {
-  t_amount space = {0};
+bool find_enough_unused_space(t_heap *heap, const size_t size) {
   t_block *block = heap->blocks;
 
   while (block) {
-    if (block->inuse == false) {
-      if (block->size == (size_t)TINY_BLOCK_SIZE - SIZEOF_BLOCK) {
-        space.tiny = space.tiny + 1;
-      } else {
-        space.small = space.small + 1;
-      }
+    if (block->inuse == false && block->size >= size) {
 
-      if (((block->next && block->next->inuse == true) || !block->next) &&
-          space.small >= amount.small && space.tiny >= amount.tiny) {
-        while (block->prev && block->prev->inuse == false) {
-          block = block->prev;
-        }
-        heap->unused_block = block;
-        return true;
-      } else {
-        space.tiny = 0;
-        space.small = 0;
-      }
+      heap->unused_block = block;
+      return true;
     }
     block = block->next;
   }
@@ -81,24 +66,17 @@ bool find_enough_unused_space(t_heap *heap, t_amount amount) {
   return false;
 }
 
-t_amount amount_of_unused_space(t_heap *heap) {
-  t_amount space = {0};
-  t_block *block = heap->blocks;
+t_heap *find_heap_for_block(t_block *block) {
+  t_heap *current_heap = g_heap;
 
-  while (block) {
-    if (block->inuse == false) {
-      heap->unused_block = block;
-      if (block->size == (size_t)TINY_BLOCK_SIZE - SIZEOF_BLOCK) {
-        space.tiny = space.tiny + 1;
-      } else {
-        space.small = space.small + 1;
-      }
-      if (block->next && block->inuse == true) {
-        return space;
-      }
+  while (current_heap) {
+    uintptr_t heap_start = (uintptr_t)current_heap;
+    uintptr_t heap_end = heap_start + current_heap->total_size;
+
+    if ((uintptr_t)block >= heap_start && (uintptr_t)block < heap_end) {
+      return current_heap;
     }
-    block = block->next;
+    current_heap = current_heap->prev;
   }
-
-  return space;
+  return NULL;
 }

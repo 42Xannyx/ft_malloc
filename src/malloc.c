@@ -7,42 +7,40 @@
 #include <stdint.h>
 #include <stdio.h>
 
-bool create_large_heap(const size_t n) {
+static bool create_large_heap(const size_t n) {
   return n > (size_t)SMALL_HEAP_ALLOCATION_SIZE;
 }
 
-static t_block *allocate_memory(t_heap **heap, size_t aligned_size) {
+static t_block *allocate_memory(t_heap **heap, const size_t aligned_size) {
   t_heap *tmp_heap = *heap;
-  t_amount amount_blocks = count_blocks(aligned_size);
-  const size_t block_size = get_total_alloc_size(amount_blocks);
-  amount_blocks.is_large = create_large_heap(aligned_size);
-
+  bool is_large = create_large_heap(aligned_size);
   while (tmp_heap && tmp_heap->next) {
     tmp_heap = tmp_heap->next;
   }
 
   // Heap is empty or is bigger than the acceptable heap size
-  if (!*heap || amount_blocks.is_large == true) {
+  if (!*heap || is_large == true) {
     DEBUG_PRINT_SIMPLE("Extending heap by being empty or a LARGE allocation");
-    return extend_heap(&g_heap, amount_blocks, aligned_size);
+    return extend_heap(&g_heap, is_large, aligned_size);
   }
 
   // Blocks are not in use and can be reused
-  bool enough_space = find_enough_unused_space(*heap, amount_blocks);
+  bool enough_space = find_enough_unused_space(*heap, aligned_size);
   if (enough_space == true) {
     DEBUG_PRINT_SIMPLE("Reuse blocks");
     return reuse_block(&tmp_heap, aligned_size);
   }
 
   // There is no more free space to allocate new blocks
+  const size_t block_size = aligned_size + SIZEOF_BLOCK;
   if ((int64_t)block_size > tmp_heap->free_size) {
     DEBUG_PRINT_SIMPLE("Call mmap()");
-    return extend_heap(heap, amount_blocks, aligned_size);
+    return extend_heap(heap, false, aligned_size);
   }
 
   // Add new blocks to the heap
   DEBUG_PRINT_SIMPLE("Add blocks");
-  t_block *blocks = extend_blocks(&tmp_heap, amount_blocks, aligned_size);
+  t_block *blocks = extend_blocks(&tmp_heap, aligned_size);
 
   *heap = tmp_heap;
   return blocks;
@@ -66,13 +64,9 @@ void *ft_malloc(size_t size) {
   }
 
   block->magic_start = BLOCK_MAGIC;
-  t_block *tmp = block;
 
-  while (tmp && tmp->next) {
-    tmp = tmp->next;
-  }
-
-  uint32_t *magic_end = (uint32_t *)((char *)tmp + SIZEOF_BLOCK + tmp->size);
+  uint32_t *magic_end =
+      (uint32_t *)((char *)block + SIZEOF_BLOCK + block->size);
   *magic_end = BLOCK_MAGIC;
 
   pthread_mutex_unlock(&g_mutex);

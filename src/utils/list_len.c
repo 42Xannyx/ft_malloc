@@ -1,5 +1,4 @@
 #include "alloc.h"
-#include <stdio.h>
 
 #include "debug.h"
 
@@ -19,20 +18,20 @@ size_t block_list_len(void *lst) {
   return len;
 }
 
-size_t block_list_len_by_id(void *lst) {
-  if (!lst) {
-    return 0;
-  }
-
-  size_t len = 0;
-  t_block *block = (t_block *)lst;
-  ssize_t current_id = block->_id;
-
-  while (block && current_id == block->_id) {
-    print_block(block);
-    block = block->next;
-    len++;
-  }
-
-  return len;
-}
+/*size_t block_list_len_by_id(void *lst) {*/
+/*  if (!lst) {*/
+/*    return 0;*/
+/*  }*/
+/**/
+/*  size_t len = 0;*/
+/*  t_block *block = (t_block *)lst;*/
+/*  ssize_t current_id = block->_id;*/
+/**/
+/*  while (block && current_id == block->_id) {*/
+/*    print_block(block);*/
+/*    block = block->next;*/
+/*    len++;*/
+/*  }*/
+/**/
+/*  return len;*/
+/*}*/

@@ -153,8 +153,8 @@ int main(void) {
   output = capture_stdout(test_large_allocation, true);
   assert(contains_substring(output, "Call munmap()"));
   assert(contains_substring(output, "LARGE allocation"));
-  assert(contains_substring(output, "Block Count\033[0m: 172"));
-  assert(extract_mmap_size(output) == 43968);
+  assert(contains_substring(output, "Block Count\033[0m: 1"));
+  assert(extract_mmap_size(output) == 33000);
 #if DEBUG
   printf("Test 1: Large allocation\n");
   printf("--- Test 1 ---\n%s\n------- END TEST 1 --------\n", output);
@@ -165,8 +165,8 @@ int main(void) {
   output = capture_stdout(test_large_allocation, true);
   assert(contains_substring(output, "Call munmap()"));
   assert(contains_substring(output, "LARGE allocation"));
-  assert(contains_substring(output, "Block Count\033[0m: 172"));
-  assert(extract_mmap_size(output) == 43968);
+  assert(contains_substring(output, "Block Count\033[0m: 1"));
+  assert(extract_mmap_size(output) == 33000);
   assert(contains_substring(output, "Previous Heap\033[0m: 0x0"));
 #if DEBUG
   printf("Test 2: Another Large allocation\n");
@@ -180,7 +180,6 @@ int main(void) {
   assert(contains_substring(output, "Call munmap()"));
   assert(contains_substring(output, "Block Count\033[0m: 1"));
   assert(extract_mmap_size(output) == (size_t)TINY_HEAP_ALLOCATION_SIZE);
-
 #if DEBUG
   printf("Test 3: Tiny allocation\n");
   printf("--- Test 3 ---\n%s\n------- END TEST 3 --------\n", output);
@@ -229,7 +228,7 @@ int main(void) {
   g_heap = NULL;
 
   // Test 7: Multiple allocations and reusing blocks
-  output = capture_stdout(test_single_byte_allocation, false);
+  output = capture_stdout(test_tiny_allocation, false);
   assert(contains_substring(output, "LARGE allocation"));
   assert(extract_mmap_size(output) == (size_t)TINY_HEAP_ALLOCATION_SIZE);
   assert(contains_substring(output, "Block Count\033[0m: 1"));
@@ -270,7 +269,7 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  output = capture_stdout(test_small_allocation, true);
+  output = capture_stdout(test_tiny_allocation, true);
   assert(contains_substring(output, "Block Count\033[0m: 2"));
   assert(contains_substring(output, "Add blocks"));
 
@@ -279,7 +278,7 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  output = capture_stdout(test_single_byte_allocation, false);
+  output = capture_stdout(test_small_allocation, false);
   assert(contains_substring(output, "Block Count\033[0m: 3"));
   assert(contains_substring(output, "Add blocks"));
 
@@ -370,12 +369,12 @@ int main(void) {
   g_heap = NULL;
 
 #if DEBUG
-  printf("\nTest 12: Create 1 LARGE allocs and add 128 SMALL allocs\n");
+  printf("\nTest 12: Create 1 LARGE allocs and add 140 SMALL allocs\n");
   fflush(stdout);
 #endif
 
   output = capture_stdout(test_large_allocation, false);
-  for (int32_t i = 0; i < 127; i++) {
+  for (int32_t i = 0; i < 140; i++) {
     output = capture_stdout(test_small_allocation, false);
   }
 
@@ -388,12 +387,12 @@ int main(void) {
   g_heap = NULL;
 
 #if DEBUG
-  printf("\nTest 13: Create 1 LARGE allocs and add 129 SMALL allocs\n");
+  printf("\nTest 13: Create 1 LARGE allocs and add 141 SMALL allocs\n");
   fflush(stdout);
 #endif
 
   output = capture_stdout(test_large_allocation, false);
-  for (int32_t i = 0; i < 128; i++) {
+  for (int32_t i = 0; i < 141; i++) {
     output = capture_stdout(test_small_allocation, false);
   }
 
@@ -412,24 +411,23 @@ int main(void) {
 
   ptr = ft_malloc(1);
 
-  fill_string(ptr, 79);
+  fill_string(ptr, 7);
 
   ft_free(ptr);
   g_heap = NULL;
 
-  /*#if DEBUG*/
-  /*  printf("\nTest 15: Allocate more than a regular block and do not buffer
-   * "*/
-  /*         "overflow\n");*/
-  /*  fflush(stdout);*/
-  /*#endif*/
-  /**/
-  /*  ptr = ft_malloc(300);*/
-  /**/
-  /*  fill_string(ptr, 241);*/
-  /**/
-  /*  ft_free(ptr);*/
-  /*  g_heap = NULL;*/
+#if DEBUG
+  printf("\nTest 15: Allocate more than a regular block and do not buffer "
+         "overflow\n");
+  fflush(stdout);
+#endif
+
+  ptr = ft_malloc(300);
+
+  fill_string(ptr, 300);
+
+  ft_free(ptr);
+  g_heap = NULL;
 
   printf("All tests completed successfully.\n");
   return 0;

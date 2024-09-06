@@ -25,25 +25,6 @@ int32_t destroy_heap(t_heap **heap) {
   return ret;
 }
 
-t_heap *find_heap_for_block(t_block *block) {
-  t_heap *current_heap = g_heap;
-
-  while (current_heap) {
-    uintptr_t heap_start = (uintptr_t)current_heap;
-    uintptr_t heap_end = heap_start + current_heap->total_size;
-
-    DEBUG_PRINT("Heap start: %zu\n", heap_start);
-    DEBUG_PRINT("Heap start: %zu\n", heap_end);
-    DEBUG_PRINT("Block: %zu\n", (uintptr_t)block);
-
-    if ((uintptr_t)block >= heap_start && (uintptr_t)block < heap_end) {
-      return current_heap;
-    }
-    current_heap = current_heap->prev;
-  }
-  return NULL;
-}
-
 void realign_heap(t_heap *to_remove) {
   if (!to_remove->next && !to_remove->prev) {
     g_heap = NULL;
@@ -105,17 +86,15 @@ void ft_free(void *ptr) {
 
   check_buffer_overflow(block);
 
-  ssize_t current_id = block->_id;
   t_block *tmp = block;
-
-  while (tmp && tmp->_id == current_id) {
+  while (tmp) {
     tmp->inuse = false;
     tmp = tmp->next;
   }
 
   block = tmp;
 
-  size_t block_len = block_list_len_by_id(block);
+  /*size_t block_len = block_list_len_by_id(block);*/
   bool blocks_in_use = blocks_inuse(heap);
 
 #ifdef DEBUG
@@ -124,7 +103,7 @@ void ft_free(void *ptr) {
   print_heap(heap, false);
 #endif
 
-  if (block_len == heap->block_count || blocks_in_use == false) {
+  if (1 == heap->block_count || blocks_in_use == false) {
     realign_heap(heap);
     int32_t ret = destroy_heap(&heap);
 

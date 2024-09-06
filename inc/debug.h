@@ -37,7 +37,7 @@
 void print_sizes(void);
 void print_block(t_block *block);
 void print_heap(t_heap *heap, bool show_blocks);
-void print_block_count(t_amount block_count);
+/*void print_block_count(t_amount block_count);*/
 #endif // DEBUG
 
 #endif // DEBUG_H
