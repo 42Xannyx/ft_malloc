@@ -14,14 +14,11 @@ t_block *extend_heap(t_heap **heap, bool is_large, const size_t size) {
   const size_t total_size = get_total_size(is_large, size);
 
   DEBUG_PRINT("Calling mmap with total_size %zu\n", total_size);
-
   t_heap *tmp_heap = (t_heap *)mmap(NULL, total_size, PROT, MAP, -1, 0);
   if (tmp_heap == MAP_FAILED) {
     perror("mmap()");
     return NULL;
   }
-
-  DEBUG_PRINT("mmap returned %p\n", (void *)tmp_heap);
 
   tmp_heap->total_size = total_size;
   tmp_heap->free_size = total_size - size - SIZEOF_HEAP - SIZEOF_BLOCK;
@@ -41,24 +38,26 @@ t_block *extend_heap(t_heap **heap, bool is_large, const size_t size) {
     (*heap)->next = tmp_heap;
   }
 
-  t_block *tmp_block = block;
-
-  while (tmp_block->next) {
-    tmp_block = tmp_block->next;
+  // Add blocks to the new heap
+  t_block *block = add_block(&tmp_heap, size);
+  if (!block) {
+    // Handle allocation failure
+    munmap(tmp_heap, total_size);
+    return NULL;
   }
 
-  tmp_heap = *heap;
+  // Calculate actual free size after block allocation
+  tmp_heap->free_size =
+      total_size - (tmp_heap->block_count * SIZEOF_BLOCK) - SIZEOF_HEAP - size;
 
-  while (tmp_heap->next) {
-    tmp_heap = tmp_heap->next;
+  // Set last_block directly from add_block result
+  tmp_heap->last_block = block;
+  while (tmp_heap->last_block->next) {
+    tmp_heap->last_block = tmp_heap->last_block->next;
   }
-
-  tmp_heap->last_block = tmp_block;
-
-  *heap = tmp_heap;
 
 #ifdef DEBUG
-  print_heap(*heap, false);
+  print_heap(tmp_heap, false);
 #endif
 
   return block;
