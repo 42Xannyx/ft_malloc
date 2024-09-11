@@ -7,6 +7,10 @@
 #include <stdint.h>
 #include <stdio.h>
 
+static inline bool create_large_heap(const size_t n) {
+  return n > (size_t)SMALL_HEAP_ALLOCATION_SIZE;
+}
+
 static t_block *allocate_memory(t_heap **heap, const size_t aligned_size) {
   t_heap *tmp_heap = *heap;
   bool is_large = create_large_heap(aligned_size);

@@ -16,8 +16,8 @@ void *ft_realloc(void *ptr, size_t size) {
   }
 
   if (size == 0) {
-    ft_free(ptr);
     pthread_mutex_unlock(&g_mutex);
+    ft_free(ptr);
     return NULL;
   }
 

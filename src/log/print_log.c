@@ -21,7 +21,7 @@ static void write_size_t(size_t value) {
 
 static void write_int(int64_t value) {
   char buffer[BUFFER_SIZE];
-  int len = snprintf(buffer, BUFFER_SIZE, "%lld", value);
+  int len = snprintf(buffer, BUFFER_SIZE, "%ld", value);
   write(STDOUT_FILENO, buffer, len);
 }
 

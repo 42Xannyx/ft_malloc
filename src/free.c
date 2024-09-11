@@ -13,7 +13,7 @@
 
 void report_corruption(void) {
   const char *error_msg = "Memory corruption detected!\n";
-  write(STDERR_FILENO, error_msg, 30);
+  write(STDERR_FILENO, error_msg, 29);
 }
 
 int32_t destroy_heap(t_heap **heap) {
