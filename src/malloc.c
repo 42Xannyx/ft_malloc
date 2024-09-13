@@ -3,6 +3,8 @@
 #include "libft_plus.h"
 #include "shared.h"
 
+#include <errno.h>
+#include <sys/resource.h>
 #include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -53,11 +55,11 @@ void *ft_malloc(size_t size) {
 
   pthread_mutex_lock(&g_mutex);
 
-  struct rlimit lim;
+  struct rlimit as_lim, data_lim;
 
   // Check size of heap & size of virtual space
   if (getrlimit(RLIMIT_AS, &as_lim) == -1 || getrlimit(RLIMIT_DATA, &data_lim) == -1) {
-    pthread_mutex_unlock(&mutex);
+    pthread_mutex_unlock(&g_mutex);
     errno = ENOMEM;
     return NULL;
   }
