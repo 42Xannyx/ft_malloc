@@ -90,60 +90,60 @@ size_t extract_mmap_size(const char *output) {
 }
 
 // Test functions (modified to return void for use with capture_stdout)
-void test_large_allocation(bool free) {
-  char *test = ft_malloc(sizeof(char) * LARGE_ALLOC);
+void test_large_allocation(bool should_free) {
+  char *test = malloc(sizeof(char) * LARGE_ALLOC);
 
   assert(test != NULL);
   fill_string(test, 10);
-  if (free == true) {
-    ft_free(test);
+  if (should_free == true) {
+    free(test);
     g_heap = NULL;
   }
 }
 
-void test_tiny_allocation(bool free) {
-  char *test = ft_malloc(sizeof(char) * 64);
+void test_tiny_allocation(bool should_free) {
+  char *test = malloc(sizeof(char) * 64);
   assert(test != NULL);
   fill_string(test, 10);
 
-  if (free) {
-    ft_free(test);
+  if (should_free) {
+    free(test);
   }
 }
 
-void test_single_byte_allocation(bool free) {
-  char *test = ft_malloc(sizeof(char));
+void test_single_byte_allocation(bool should_free) {
+  char *test = malloc(sizeof(char));
   assert(test != NULL);
   fill_string(test, 1);
-  if (free == true) {
-    ft_free(test);
+  if (should_free == true) {
+    free(test);
   }
 }
 
-void test_small_allocation(bool free) {
-  char *test = ft_malloc(sizeof(char) * 192);
+void test_small_allocation(bool should_free) {
+  char *test = malloc(sizeof(char) * 192);
   assert(test != NULL);
   fill_string(test, 1);
-  if (free == true) {
-    ft_free(test);
+  if (should_free == true) {
+    free(test);
   }
 }
 
 void test_zero_allocation(void) {
   printf("Test 5: Zero allocation\n");
-  void *ptr = ft_malloc(0);
+  void *ptr = malloc(0);
   assert(ptr == NULL);
 }
 
 void test_multiple_allocations(void) {
-  char *test1 = ft_malloc(sizeof(char) * 64);
-  char *test2 = ft_malloc(sizeof(char) * 64);
+  char *test1 = malloc(sizeof(char) * 64);
+  char *test2 = malloc(sizeof(char) * 64);
 
   assert(test1 != NULL);
   assert(test2 != NULL);
 
-  ft_free(test1);
-  ft_free(test2);
+  free(test1);
+  free(test2);
 }
 
 int main(void) {
@@ -199,7 +199,7 @@ int main(void) {
 #endif
 
   // Test 5: Zero allocation
-  assert(ft_malloc(0) == NULL);
+  assert(malloc(0) == NULL);
 #if DEBUG
   printf("Test 5: Zero allocation\n");
   fflush(stdout);
@@ -289,7 +289,7 @@ int main(void) {
   g_heap = NULL;
 
   // Test 9: Adding two new heaps, and then freeing the first one of the list
-  char *ptr = ft_malloc(LARGE_ALLOC);
+  char *ptr = malloc(LARGE_ALLOC);
 #if DEBUG
   printf("Test 9: Adding two new heaps, and then freeing the first one of the "
          "list\n");
@@ -311,7 +311,7 @@ int main(void) {
 #endif
 
   // Remove the first heap*/
-  ft_free(ptr);
+  free(ptr);
   fflush(stdout);
 
   // The second heap should be the first heap and still accept new blocks
@@ -409,11 +409,11 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  ptr = ft_malloc(1);
+  ptr = malloc(1);
 
   fill_string(ptr, 7);
 
-  ft_free(ptr);
+  free(ptr);
   g_heap = NULL;
 
 #if DEBUG
@@ -422,11 +422,11 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  ptr = ft_malloc(300);
+  ptr = malloc(300);
 
   fill_string(ptr, 300);
 
-  ft_free(ptr);
+  free(ptr);
   g_heap = NULL;
 
 #if DEBUG
@@ -434,8 +434,8 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  ptr = ft_malloc(8);
-  ptr = ft_realloc(ptr, 0);
+  ptr = malloc(8);
+  ptr = realloc(ptr, 0);
 
   // Should crash
   /*fill_string(ptr, 1);*/
@@ -447,10 +447,10 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  ptr = ft_malloc(1);
+  ptr = malloc(1);
   fill_string(ptr, 1);
 
-  ptr = ft_realloc(ptr, 12);
+  ptr = realloc(ptr, 12);
   assert(ptr[0] == 'A');
 
   g_heap = NULL;
@@ -460,10 +460,10 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  ptr = ft_malloc(4);
+  ptr = malloc(4);
   fill_string(ptr, 4);
 
-  ptr = ft_realloc(ptr, 5);
+  ptr = realloc(ptr, 5);
   assert(ptr[0] == 'A');
   assert(ptr[1] == 'B');
   assert(ptr[2] == 'C');
@@ -476,10 +476,10 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  ptr = ft_malloc(4);
+  ptr = malloc(4);
   fill_string(ptr, 4);
 
-  ptr = ft_realloc(ptr, 5);
+  ptr = realloc(ptr, 5);
   assert(ptr[0] == 'A');
   assert(ptr[1] == 'B');
   assert(ptr[2] == 'C');
@@ -492,7 +492,7 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  ptr = ft_realloc(NULL, 5);
+  ptr = realloc(NULL, 5);
   assert(ptr);
 
   g_heap = NULL;

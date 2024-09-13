@@ -58,7 +58,7 @@ void realign_heap(t_heap *to_remove) {
  *
  * @return void
  */
-void ft_free(void *ptr) {
+void free(void *ptr) {
   pthread_mutex_lock(&g_mutex);
 
   if (!ptr) {
