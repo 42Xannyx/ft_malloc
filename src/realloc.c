@@ -13,7 +13,7 @@ void *realloc(void *ptr, size_t size) {
 
   if (!ptr) {
     pthread_mutex_unlock(&g_mutex);
-    void *new_ptr = ft_malloc(size);
+    void *new_ptr = malloc(size);
     return new_ptr;
   }
 
@@ -62,7 +62,7 @@ void *realloc(void *ptr, size_t size) {
     return ptr;
   }
 
-  void *new_ptr = ft_malloc(size);
+  void *new_ptr = malloc(size);
   if (!new_ptr) {
     pthread_mutex_unlock(&g_mutex);
     return NULL;
