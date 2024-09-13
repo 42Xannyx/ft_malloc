@@ -89,7 +89,7 @@ void test_large_allocation(bool check_free) {
 
   assert(test != NULL);
   fill_string(test, 10);
-  if (should_free == true) {
+  if (check_free == true) {
     free(test);
     g_heap = NULL;
   }
@@ -100,12 +100,12 @@ void test_tiny_allocation(bool check_free) {
   assert(test != NULL);
   fill_string(test, 10);
 
-  if (should_free) {
+  if (check_free) {
     free(test);
   }
 }
 
-void test_single_byte_allocation(bool free) {
+void test_single_byte_allocation(bool check_free) {
   char *test = ft_malloc(sizeof(char));
   assert(test != NULL);
   fill_string(test, 1);
@@ -118,20 +118,20 @@ void test_small_allocation(bool check_free) {
   char *test = ft_malloc(sizeof(char) * 192);
   assert(test != NULL);
   fill_string(test, 1);
-  if (should_free == true) {
+  if (check_free == true) {
     free(test);
   }
 }
 
 void test_zero_allocation(void) {
   printf("Test 5: Zero allocation\n");
-  void *ptr = malloc(0);
+  void *ptr = ft_malloc(0);
   assert(ptr == NULL);
 }
 
 void test_multiple_allocations(void) {
-  char *test1 = malloc(sizeof(char) * 64);
-  char *test2 = malloc(sizeof(char) * 64);
+  char *test1 = ft_malloc(sizeof(char) * 64);
+  char *test2 = ft_malloc(sizeof(char) * 64);
 
   assert(test1 != NULL);
   assert(test2 != NULL);
@@ -193,7 +193,7 @@ int main(void) {
 #endif
 
   // Test 5: Zero allocation
-  assert(malloc(0) == NULL);
+  assert(ft_malloc(0) == NULL);
 #if DEBUG
   printf("Test 5: Zero allocation\n");
   fflush(stdout);
@@ -283,7 +283,7 @@ int main(void) {
   g_heap = NULL;
 
   // Test 9: Adding two new heaps, and then freeing the first one of the list
-  char *ptr = malloc(LARGE_ALLOC);
+  char *ptr = ft_malloc(LARGE_ALLOC);
 #if DEBUG
   printf("Test 9: Adding two new heaps, and then freeing the first one of the "
          "list\n");
@@ -403,7 +403,7 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  ptr = malloc(1);
+  ptr = ft_malloc(1);
 
   fill_string(ptr, 7);
 
@@ -416,7 +416,7 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  ptr = malloc(300);
+  ptr = ft_malloc(300);
 
   fill_string(ptr, 300);
 
@@ -441,7 +441,7 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  ptr = malloc(1);
+  ptr = ft_malloc(1);
   fill_string(ptr, 1);
 
   ptr = realloc(ptr, 12);
@@ -454,7 +454,7 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  ptr = malloc(4);
+  ptr = ft_malloc(4);
   fill_string(ptr, 4);
 
   ptr = realloc(ptr, 5);
@@ -470,7 +470,7 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  ptr = malloc(4);
+  ptr = ft_malloc(4);
   fill_string(ptr, 4);
 
   ptr = realloc(ptr, 5);

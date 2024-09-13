@@ -48,7 +48,7 @@ static t_block *allocate_memory(t_heap **heap, const size_t aligned_size) {
   return blocks;
 }
 
-void *malloc(size_t size) {
+void *ft_malloc(size_t size) {
   if (size == 0) {
     return NULL;
   }
