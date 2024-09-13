@@ -430,7 +430,7 @@ int main(void) {
   g_heap = NULL;
 
 #if DEBUG
-  printf("\nTest 16: Reallocate to zero. Destroying the heap\n");
+  printf("\nTest 16: Reallocate to zero. Destroying the heap. Should crash\n");
   fflush(stdout);
 #endif
 
@@ -439,6 +439,61 @@ int main(void) {
 
   // Should crash
   /*fill_string(ptr, 1);*/
+
+  g_heap = NULL;
+
+#if DEBUG
+  printf("\nTest 17: Reallocate to a higher value. This should keep the old text intact\n");
+  fflush(stdout);
+#endif
+
+  ptr = ft_malloc(1);
+  fill_string(ptr, 1);
+
+  ptr = ft_realloc(ptr, 12);
+  assert(ptr[0] == 'A');
+
+  g_heap = NULL;
+
+#if DEBUG
+  printf("\nTest 18: Allocate a lower value. Which should keep a part of the text\n");
+  fflush(stdout);
+#endif
+
+  ptr = ft_malloc(4);
+  fill_string(ptr, 4);
+
+  ptr = ft_realloc(ptr, 5);
+  assert(ptr[0] == 'A');
+  assert(ptr[1] == 'B');
+  assert(ptr[2] == 'C');
+  assert(ptr[3] == 'D');
+
+  g_heap = NULL;
+
+#if DEBUG
+  printf("\nTest 19: realloc lower than 0\n");
+  fflush(stdout);
+#endif
+
+  ptr = ft_malloc(4);
+  fill_string(ptr, 4);
+
+  ptr = ft_realloc(ptr, 5);
+  assert(ptr[0] == 'A');
+  assert(ptr[1] == 'B');
+  assert(ptr[2] == 'C');
+  assert(ptr[3] == 'D');
+
+  g_heap = NULL;
+
+#if DEBUG
+  printf("\nTest 20: Realloc a NULL pointer and get a block of a size of 5\n");
+  fflush(stdout);
+#endif
+
+  ptr = ft_realloc(NULL, 5);
+  assert(ptr);
 
   g_heap = NULL;
 
