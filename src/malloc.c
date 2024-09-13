@@ -53,6 +53,15 @@ void *ft_malloc(size_t size) {
 
   pthread_mutex_lock(&g_mutex);
 
+  struct rlimit lim;
+
+  // Check size of heap & size of virtual space
+  if (getrlimit(RLIMIT_AS, &as_lim) == -1 || getrlimit(RLIMIT_DATA, &data_lim) == -1) {
+    pthread_mutex_unlock(&mutex);
+    errno = ENOMEM;
+    return NULL;
+  }
+
   t_block *block;
   const size_t aligned_size = align(size);
 

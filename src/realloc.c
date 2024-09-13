@@ -10,9 +10,18 @@ void *ft_realloc(void *ptr, size_t size) {
   pthread_mutex_lock(&g_mutex);
 
   if (!ptr) {
-    void *new_ptr = ft_malloc(size);
     pthread_mutex_unlock(&g_mutex);
+    void *new_ptr = ft_malloc(size);
     return new_ptr;
+  }
+
+  struct rlimit lim;
+
+  // Check size of heap & size of virtual space
+  if (getrlimit(RLIMIT_AS, &as_lim) == -1 || getrlimit(RLIMIT_DATA, &data_lim) == -1) {
+    pthread_mutex_unlock(&mutex);
+    errno = ENOMEM;
+    return NULL;
   }
 
   if (size == 0) {
