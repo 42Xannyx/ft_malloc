@@ -5,11 +5,11 @@
 #include <string.h>
 #include <unistd.h>
 
-#if defined(__APPLE__)
-#include <malloc/malloc.h>
-#elif defined(__linux__)
-#include <malloc.h>
-#endif
+/*#if defined(__APPLE__)*/
+/*#include <malloc/malloc.h>*/
+/*#elif defined(__linux__)*/
+/*#include <malloc.h>*/
+/*#endif*/
 
 #include "alloc.h"
 #include "debug.h"
@@ -30,7 +30,7 @@ void fill_string(char *ptr, int64_t n) {
 }
 
 // Function to capture stdout
-char *capture_stdout(void (*func)(bool), bool free) {
+char *capture_stdout(void (*func)(bool), bool check_free) {
   // Redirect stdout to a pipe
   int pipe_fd[2];
   if (pipe(pipe_fd) != 0) {
@@ -42,7 +42,7 @@ char *capture_stdout(void (*func)(bool), bool free) {
   close(pipe_fd[1]);
 
   // Run the function
-  func(free);
+  func(check_free);
 
   // Restore stdout
   fflush(stdout);
@@ -90,42 +90,42 @@ size_t extract_mmap_size(const char *output) {
 }
 
 // Test functions (modified to return void for use with capture_stdout)
-void test_large_allocation(bool free) {
+void test_large_allocation(bool check_free) {
   char *test = ft_malloc(sizeof(char) * LARGE_ALLOC);
 
   assert(test != NULL);
   fill_string(test, 10);
-  if (free == true) {
-    ft_free(test);
+  if (check_free == true) {
+    free(test);
     g_heap = NULL;
   }
 }
 
-void test_tiny_allocation(bool free) {
+void test_tiny_allocation(bool check_free) {
   char *test = ft_malloc(sizeof(char) * 64);
   assert(test != NULL);
   fill_string(test, 10);
 
-  if (free) {
-    ft_free(test);
+  if (check_free) {
+    free(test);
   }
 }
 
-void test_single_byte_allocation(bool free) {
+void test_single_byte_allocation(bool check_free) {
   char *test = ft_malloc(sizeof(char));
   assert(test != NULL);
   fill_string(test, 1);
-  if (free == true) {
-    ft_free(test);
+  if (check_free == true) {
+    free(test);
   }
 }
 
-void test_small_allocation(bool free) {
+void test_small_allocation(bool check_free) {
   char *test = ft_malloc(sizeof(char) * 192);
   assert(test != NULL);
   fill_string(test, 1);
-  if (free == true) {
-    ft_free(test);
+  if (check_free == true) {
+    free(test);
   }
 }
 
@@ -142,8 +142,8 @@ void test_multiple_allocations(void) {
   assert(test1 != NULL);
   assert(test2 != NULL);
 
-  ft_free(test1);
-  ft_free(test2);
+  free(test1);
+  free(test2);
 }
 
 int main(void) {
@@ -311,7 +311,7 @@ int main(void) {
 #endif
 
   // Remove the first heap*/
-  ft_free(ptr);
+  free(ptr);
   fflush(stdout);
 
   // The second heap should be the first heap and still accept new blocks
@@ -413,7 +413,7 @@ int main(void) {
 
   fill_string(ptr, 7);
 
-  ft_free(ptr);
+  free(ptr);
   g_heap = NULL;
 
 #if DEBUG
@@ -426,7 +426,7 @@ int main(void) {
 
   fill_string(ptr, 300);
 
-  ft_free(ptr);
+  free(ptr);
   g_heap = NULL;
 
 #if DEBUG
@@ -435,7 +435,7 @@ int main(void) {
 #endif
 
   ptr = ft_malloc(8);
-  ptr = ft_realloc(ptr, 0);
+  ptr = realloc(ptr, 0);
 
   // Should crash
   /*fill_string(ptr, 1);*/
@@ -450,7 +450,7 @@ int main(void) {
   ptr = ft_malloc(1);
   fill_string(ptr, 1);
 
-  ptr = ft_realloc(ptr, 12);
+  ptr = realloc(ptr, 12);
   assert(ptr[0] == 'A');
 
   g_heap = NULL;
@@ -463,7 +463,7 @@ int main(void) {
   ptr = ft_malloc(4);
   fill_string(ptr, 4);
 
-  ptr = ft_realloc(ptr, 5);
+  ptr = realloc(ptr, 5);
   assert(ptr[0] == 'A');
   assert(ptr[1] == 'B');
   assert(ptr[2] == 'C');
@@ -479,7 +479,7 @@ int main(void) {
   ptr = ft_malloc(4);
   fill_string(ptr, 4);
 
-  ptr = ft_realloc(ptr, 5);
+  ptr = realloc(ptr, 5);
   assert(ptr[0] == 'A');
   assert(ptr[1] == 'B');
   assert(ptr[2] == 'C');
@@ -492,7 +492,7 @@ int main(void) {
   fflush(stdout);
 #endif
 
-  ptr = ft_realloc(NULL, 5);
+  ptr = realloc(NULL, 5);
   assert(ptr);
 
   g_heap = NULL;

@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void *ft_realloc(void *ptr, size_t size) {
+void *realloc(void *ptr, size_t size) {
   pthread_mutex_lock(&g_mutex);
 
   if (!ptr) {
@@ -28,7 +28,7 @@ void *ft_realloc(void *ptr, size_t size) {
 
   if (size == 0) {
     pthread_mutex_unlock(&g_mutex);
-    ft_free(ptr);
+    free(ptr);
     return NULL;
   }
 
@@ -70,7 +70,7 @@ void *ft_realloc(void *ptr, size_t size) {
 
   memcpy(new_ptr, ptr, block->size);
 
-  ft_free(ptr);
+  free(ptr);
 
   pthread_mutex_unlock(&g_mutex);
   return new_ptr;
