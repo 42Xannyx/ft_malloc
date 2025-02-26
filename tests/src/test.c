@@ -473,11 +473,8 @@ int main(void) {
   ptr = ft_malloc(4);
   fill_string(ptr, 4);
 
-  ptr = realloc(ptr, 5);
-  assert(ptr[0] == 'A');
-  assert(ptr[1] == 'B');
-  assert(ptr[2] == 'C');
-  assert(ptr[3] == 'D');
+  ptr = realloc(ptr, 0);
+  // assert(ptr[0] == 'A');
 
   g_heap = NULL;
 

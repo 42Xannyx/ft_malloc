@@ -11,6 +11,12 @@
 void *realloc(void *ptr, size_t size) {
   pthread_mutex_lock(&g_mutex);
 
+  if (ptr && size == 0) {
+    pthread_mutex_unlock(&g_mutex);
+    free(ptr);
+    return NULL;
+  }
+
   if (!ptr) {
     pthread_mutex_unlock(&g_mutex);
     void *new_ptr = malloc(size);
@@ -23,12 +29,6 @@ void *realloc(void *ptr, size_t size) {
   if (getrlimit(RLIMIT_AS, &as_lim) == -1 || getrlimit(RLIMIT_DATA, &data_lim) == -1) {
     pthread_mutex_unlock(&g_mutex);
     errno = ENOMEM;
-    return NULL;
-  }
-
-  if (size == 0) {
-    pthread_mutex_unlock(&g_mutex);
-    free(ptr);
     return NULL;
   }
 
